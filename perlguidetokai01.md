@@ -132,8 +132,8 @@ Windows の人は，ファイル名の拡張子部分で判定するようにな
 
 1. 一人でやってみよう
 2. 他にも何かを表示してみよう(名前，年齢)
-2. `perldoc -u -f atan2` を実行してみよう
-3. 以下のソースコードをファイルに保存して，実行して，結果を比較してみよう．何が変わりましたか？
+3. `perldoc -u -f atan2` を実行してみよう
+4. 以下のソースコードをファイルに保存して，実行して，結果を比較してみよう．何が変わりましたか？
 
 ```{.perl .numberLines}
 #!/usr/bin/env perl
@@ -279,10 +279,10 @@ print("a" x 3, "\n"); # => aaa が表示される
 
 ## 練習問題
 
-* いくつか計算してみましょう．例 `1 + 2 * 3`．答えは思い通りになりましたか？
-* print 文を複数使って，プロフィールを表示してみてください．(名前，誕生日，…)
-* 半径12.5の円の円周の長さを求めるプログラムを書いてください．
-  円周の長さは半径の 2π 倍 です．答えは，78.5 くらいになる筈です．
+1. いくつか計算してみましょう．例 `1 + 2 * 3`．答えは思い通りになりましたか？
+2. 半径12.5の円の円周の長さを求めるプログラムを書いてください．
+   円周の長さは半径の 2π 倍 です．答えは，78.5 くらいになる筈です．
+   (半径は，`$r` というスカラ変数に入れてみてください．πは 3.14 として計算すると良いでしょう．)
 
 # 今回目指すもの
 
@@ -315,7 +315,7 @@ use strict;
 use warnings;
 
 open(my $fh, ">", "todolist.txt") or die;
-print($fh "sample todo,Done\n");
+print($fh "sample todo\n");
 close($fh) or die;
 ```
 
@@ -377,12 +377,13 @@ print($fh "Hello, World\n");  # カンマが無いことに注意
 
 ## 練習問題
 
-* todolist.txt ファイルの内容を確認してみましょう．
-* ファイルに色々書き込んでみましょう．
+1. todolist.txt ファイルの内容を確認してみましょう．
+2. ファイルに色々書き込んでみましょう．
 
 # TODO を追加する
 
-TODO を追加する機能を追加しましょう．
+さっきの例では，1つのプログラムから固定の TODO しか作れませんでした．
+こんどは，プログラムを変えないで，新しい TODO を追加する機能を作りましょう．
 
 ## 04_add_todo.pl
 
@@ -398,7 +399,7 @@ chomp($content);
 print($content, "\n");
 
 open(my $fh, ">>", "todolist.txt") or die;
-print($fh $content . ",NotYet", "\n");
+print($fh $content, "\n");
 close($fh) or die;
 ```
 
@@ -437,7 +438,7 @@ Perl は，スカラ値の自動変換が行われます．
 
 ```{.perl .numberLines}
 # 文字列 → 数値 への自動変換 ("10" → 10)
-1 + "10"; # => 2
+1 + "10"; # => 11
 
 # 数値 文字列の自動変換 (3 → "3")
 3 x 4; # => 3333
@@ -453,10 +454,23 @@ Perl がうまくやってくれるので，こういうことが起きている
 
 ## 練習問題
 
-* プログラムを実行してみてファイルの中身を見て TODO が追記されていることを確認しましょう
-* 何個かの入力をして，計算をするプログラムを書いてみてください．例えば，
+1. プログラムを実行してみてファイルの中身を見て TODO が追記されていることを確認しましょう
+2. 何個かの入力をして，計算をするプログラムを書いてみてください．例えば，
   2つの数を入力してもらって，足し算をするプログラムなどです
-* 半径を入力したら，直径を表示するプログラムを作ってください
+3. 半径を入力したら，直径を表示するプログラムを作ってください
+4. 下のようなファイルをそれぞれ入力して，出力するプログラムを作ってみてください
+
+入力(ex7\_4\_in.txt)
+```{.numberLines}
+3
+4
+```
+出力(ex7\_4\_out.txt)
+```{.numberLines}
+7
+12
+3333
+```
 
 # 現在 の TODO を表示する
 
@@ -519,7 +533,7 @@ while (1) {
 常に*真* です．つまり `print()` 文を処理し，条件に戻っても，常に真なので，
 `print()` が無限に繰り返されることになります．
 
-無限に繰り返すのはあまり良くないので，回数を決めたりすることがよくあります．
+無限に繰り返すのはあまり良くないので，繰り返しの回数を決めて処理することがよくあります．
 
 例えば，
 
@@ -532,6 +546,7 @@ while ($count < 10) {
 ```
 
 こうすると，最初は `$count` が `0` ですが，ブロックの中の `$count = $count + 1` が実行されるたびに `$count` の値が増えていくので，`$count` が `10` になったら，繰り返しが終了します．
+この処理はよくあるので覚えておくと良いでしょう．
 
 ## ブーリアン演算子
 
@@ -553,14 +568,149 @@ while ($count < 10) {
 
 ## 練習問題
 
-* 繰り返しを実行してみましょう．
+1. ファイルの中身を読み込んで，全部コンソールに出力するプログラムを書いてみましょう
+2. 1 から 10 までの数を表示するプログラムを書いてみてください．
+   (ヒント．`$n = $n + 1` をブロックの中で使うと，数を順に進めることができます．又，`10` まで，というのは，`10` 以下である間，と考えてもいいかもしれません．)
+3. 1 から 10 までの数を足した結果を表示するプログラムを書いてみてください．
+   (ヒント．足した結果を保持するスカラ変数，`$sum` を使うといいかもしれません．)
+4. 数字(n) を入力して，1 から n までを足した結果を出力するプログラムを書いてみてください．
+5. "quit" という文字列を入力しないと終わらないプログラムを書いてみてください．
+
+# TODO を完了済みにする
+
+TODO を完了させられなければ，TODO リストとしては未完成です．
+TODO を指定して，その TODO を完了済み(Done) としてマークできるようにしましょう．
+
+## 06_done_todo.pl
+
+```{.perl .numberLines}
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+print("which number?: ");
+my $num = <STDIN>;
+chomp($num);
+
+open(my $rfh, "<", "todolist.txt") or die;
+my @lines;
+while (my $line = <$rfh>) {
+    push(@lines, $line);
+}
+close($rfh) or die;
+
+open(my $wfh, ">", "todolist.txt") or die;
+my $count = 1;
+foreach my $line (@lines) {
+    if ($num == $count) {
+        $line = "Done," . $line;
+    }
+    print($wfh $line);
+    $count = $count + 1;
+}
+close($wfh) or die;
+```
+
+## リスト / リスト変数
+
+単一のデータとしてスカラ値があるという話をしました．
+複数のスカラ値をまとめて取り扱うために，リストという値があります．
+
+```{.perl .numberLines}
+(1, 2, 3);
+```
+
+リストは，`()` (括弧)で囲まれて，`,` (カンマ) で区切られたスカラ値で表
+現します．
+
+スカラにスカラ変数があったように，リストにもリスト変数があります．
+リスト変数は，`@ + 変数名` の形式です．
+スカラ変数と同じように，`my` で宣言して，`=` で代入できます．
+
+```{.perl .numberLines}
+my @numbers = (1, 2, 3, 4, 5);
+```
+
+リストには，複数のスカラ値が含まれています．個別のスカラ値を取り扱うために，
+`[]` を使って，添字で位置を指定します．位置は 先頭が `0` 番です．
+
+```{.perl .numberLines}
+my @numbers = (1, 2, 3, 4, 5);
+$number[0];    # => 1
+$number[2];    # => 3
+```
+
+リスト変数全体を表すときには，先頭の記号が，`@` ですが，リストの中のスカラ値部分を扱う場合には，
+先頭の記号が `$` になります．スカラとして扱うときは `$`，リストとして扱うときは `@` として覚えてしまいましょう．
+`[]` 内の数値(添字)は，リストの先頭からの位置で場所を指定します．先頭の位置は，`0` です．
+リストの一部を代入して変更することもできます．
+
+```{.perl .numberLines}
+my @numbers = (1, 2, 3, 4, 5);
+$number[0] = 10; # => @numbers は (10, 2, 3, 4, 5)
+```
+
+* 変数
+    * リスト変数
+        * リストとして扱うとき: `@ + 変数名`
+        * スカラとして扱うとき: `$ + 変数名 + [ + 位置 + ]`
+
+## push() 関数
+
+リストを操作する関数の一つです．
+リスト変数の最後にに要素を追加します．
+
+```{.perl .numberList}
+my @numbers; # @numbers => ()
+
+push(@numbers, 1); # @numbers => (1)
+push(@numbers, 2); # @numbers => (1, 2)
+push(@numbers, 3); # @numbers => (1, 2, 3)
+```
+
+## if 文
+
+`while` と同じように，条件とブロックがあります．
+`while` と違い繰り返したりしません．
+条件式が*真*であればブロックを実行，そうでなければ，ブロックを実行しません．
+
+```{.perl .numberLines}
+my $input = <STDIN>;
+if ($input) {
+    print("Your input(", $input, ") is true", "\n");
+}
+```
+
+## 練習問題
+
+1. `alpha bravo charlie delta echo` のような文字列のリストを作り，それを順に出力するプログラムを書いてください．
+2. 半径を入力して直径を出力するプログラムを作りましたが，半径が負の数だったら，直径として 0 を表示するようにしてください
+3. 以下のプログラムがどうなるか予想して，実際に確認してみてください
+
+```{.perl .numberLines}
+if ("0") {
+    print("I heard truth", "\n");
+}
+```
+
+4. 例えば以下のようなファイルを自分で作成して，そこから数字取得して，全部を合計してコンソールに出力するプログラムを書いてください．入力ファイルは各行に1つずつ数字があるようにしてください．
+
+ex9\_4\_in.txt
+
+```{.perl .numberLines}
+1
+3
+8
+10
+```
 
 # TODO の内容のうち未完了のものだけ表示する
 
 終了した TODO は見る必要が無いと思います．
 では，TODO のうち未完了のものだけ表示するプログラムを作りましょう．
 
-## 06_list_notyet_todo.pl
+## 07_list_notyet_todo.pl
 
 ```{.perl .numberLines}
 #!/usr/bin/env perl
@@ -581,50 +731,6 @@ while (my $line = <$fh>) {
 close($fh) or die;
 ```
 
-## リスト / リスト変数
-
-単一のデータとしてスカラ値があるという話をしました．
-複数のスカラ値をまとめて取り扱うために，リストという値があります．
-
-```{.perl .numberLines}
-(1, 2, 3);
-```
-
-リストは，`()` (括弧)で囲まれて，`,` (カンマ) で区切られたスカラ値で表
-現します．
-
-スカラにスカラ変数があったように，リストにもリスト変数があります．
-リスト変数は，`@ + 変数名` です．
-スカラ変数と同じように，`my` で宣言して，`=` で代入できます．
-
-```{.perl .numberLines}
-my @numbers = (1, 2, 3, 4, 5);
-```
-
-リストには，複数のスカラ値が含まれています．個別のスカラ値を取り扱うために，
-`[]` を使います．
-
-```{.perl .numberLines}
-my @numbers = (1, 2, 3, 4, 5);
-$number[0];    # => 1
-$number[2];    # => 3
-```
-
-リスト変数全体を表すときには，先頭の記号が，`@` ですが，リストの中のスカラ値部分を扱う場合には，
-先頭の記号が `$` になります．
-`[]` 内の数値(添字)は，リストの先頭からの位置で場所を指定します．先頭の位置は，`0` です．
-リストの一部を代入して変更することもできます．
-
-```{.perl .numberLines}
-my @numbers = (1, 2, 3, 4, 5);
-$number[0] = 10; # => @numbers は (10, 2, 3, 4, 5)
-```
-
-* 変数
-    * リスト変数
-        * `@ + 変数名`
-        * `$ + 変数名 + [ + 位置 + ]`
-
 ## split() 関数
 
 `split()` は，区切り文字と文字列を引数に取り，文字列を分割します．
@@ -634,7 +740,7 @@ $number[0] = 10; # => @numbers は (10, 2, 3, 4, 5)
 ## スカラコンテキスト / リストコンテキスト
 
 コンテキストは，その位置に置かれたものは，何として扱われるか，ということです．
-まったくわからないかと思いますので，例を上げます．
+言葉だけではイメージできないと思いますので，例を上げます．
 
 ```{.perl .numberLines}
 # スカラーコンテキスト
@@ -663,6 +769,14 @@ my ($line) = <>;
 スカラコンテキストでは，1行だけ結果を返していたのが，
 リストコンテキストでは，全部の行をリストで返します．
 
+では，以下のような場合，入力が3行以上あったとすると，どうなるでしょうか？
+
+```{.perl .numberLines}
+my ($line1, $line2) = <>;
+```
+
+答は，3行目以降は捨てられます．逆に入力が足りなかった場合には，`undef` で埋められます．例えば1行しか入力が無かったら，`$line2` は `undef` になります．
+
 上記の例は，代入でしたが，`while` などの条件式や演算子の引数もスカラコンテキストです．
 
 * コンテキスト
@@ -673,67 +787,8 @@ my ($line) = <>;
 
 ## 練習問題
 
-* 半径を入力して直径を出力を作りましたが，半径が負の数だったら，直径として 0 を表示するようにしてください
-* 以下のプログラムがどうなるか予想して，実際に確認してみてください
-
-```{.perl .numberLines}
-if ("0") {
-    print("I heard truth", "\n");
-}
-```
-
-# TODO を完了済みにする
-
-TODO を完了させられなければ，TODO リストとしては未完成です．
-TODO を指定して，その TODO を完了済み(Done) としてマークできるようにしましょう．
-
-以前に作った，未完了の TODO を表示するプログラムからの出力に出なくなる筈です．
-
-## 07_done_todo.pl
-
-```{.perl .numberLines}
-#!/usr/bin/env perl
-
-use strict;
-use warnings;
-
-print("which number?: ");
-my $num = <STDIN>;
-
-open(my $rfh, "<", "todolist.txt") or die;
-my @lines = <$rfh>;
-close($rfh) or die;
-
-open(my $wfh, ">", "todolist.txt") or die;
-my $count = 1;
-foreach my $line (@lines) {
-    chomp($line);
-    my ($content, $state) = split(/,/, $line);
-    if ($num == $count) {
-        $state = "Done";
-    }
-    print($wfh $content, ",", $state, "\n");
-    $count = $count + 1;
-}
-close($wfh) or die;
-```
-
-## if 文
-
-`while` と同じように，条件とブロックがあります．
-`while` と違い繰り返したりしません．
-条件式が*真*であればブロックを実行，そうでなければ，ブロックを実行しません．
-
-```{.perl .numberLines}
-my $input = <STDIN>;
-if ($input) {
-    print("Your input(", $input, ") is true", "\n");
-}
-```
-
-## 練習問題
-
-* 1行に1つずつの数のリストを入力の終りまで読み込んで，以下に示す人名の
+1. 例えば，"2014,10,20" のような文字列を入力したら，"2014年10月20日です" という文字列を出力するプログラムを書いてみてください．
+2. 1行に1つずつの数のリストを入力の終りまで読み込んで，以下に示す人名の
   リストから数に対応する人名を表示するプログラムを書いてください．
   例えば，入力された番号が 1, 2, 4, 2 だとすると，fread, betty, dino,
   betty となります．
@@ -875,25 +930,40 @@ if ("a") {
 
 : `print()`
 
-    引数をコンソールに出力する
+    引数をコンソールに出力する．
     最初の引数をファイルハンドルにすると，そのファイルハンドルに出力する
 
 : `open()`
 
-    指定したファイルのファイルハンドルを作る
+    指定したファイルのファイルハンドルを作る．
     `"<"` 読み込み，`">"` 書き込み，`">>"` 追記のモードがある．
 
 : `close()`
 
-    ファイルハンドルの後片付けをする
+    ファイルハンドルの後片付けをする．
 
 : `chomp()`
 
-    引数の値の末尾の改行文字を削除する
+    引数の値の末尾の改行文字を削除する．
+
+: `push()`
+
+    リスト変数の末尾に値を追加する．
     
 : `split()`
 
-    文字列を区切りで区切って，リスト値にして返す
+    文字列を区切りで区切って，リスト値にして返す．
+
+## if 文
+
+`if` は，ブロックを実行するかしないかを，条件式で決めます．
+
+```{.perl .numberLines}
+my $a = 10;
+if ($a > 5) {
+    print("over", "\n");
+}
+```
 
 ## while 文
 
@@ -905,17 +975,6 @@ my $count = 0;
 while ($count < 5) {
     print($count, "\n");
     $count = $count + 1;
-}
-```
-
-## if 文
-
-`if` は，ブロックを実行するかしないかを，条件式で決めます．
-
-```{.perl .numberLines}
-my $a = 10;
-if ($a > 5) {
-    print("over", "\n");
 }
 ```
 
@@ -1007,20 +1066,376 @@ foreach (@lines) {
 }
 ```
 
-
 ## 4. 練習問題
+
+### 1.
+
+出てきた演算子は，`+`, `-`, `*`, `/`, `.`, `x` です．
+それぞれを使ってみて，演算子に慣れましょう．
+
+```{.perl .numberLines}
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+print(1 + 3, "\n"); # => 4
+print(3 - 1, "\n"); # => 2
+print(2 * 5, "\n"); # => 10
+print(5 / 2, "\n"); # => 2.5
+print("aaa" . "bbb", "\n"); # => "aaabbb"
+print("Abc" x 3, "\n"); # => "AbcAbcAbc"
+
+print(1 + 2 * 3, "\n"); # => 7
+```
+
+### 2.
+
+変数を使うときに最初に，`my` を入れるのを忘れないでください．
+
+```{.perl .numberLines}
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+my $r = 12.5;
+my $pi = 3.14;
+print(2 * $pi * $r, "\n"); # => 78.5
+```
 
 ## 5. 練習問題
 
+### 1.
+
+TODO リストとして良くあるのは，期限やカテゴリです．
+良い機能があれば教えてください．
+
 ## 6. 練習問題
+
+### 1.
+
+`print()` で書き込んだ内容がファイルの中にあることを確認してください．
+
+### 2.
+
+どんな内容でも良いですが，以下のようになると思います．
+`open()` の後に `print()` があって，`close()` の順序になっていれば良いでしょう．
+
+あと，書き込んだファイルの中身が想像通りになっているかどうかを確認してください．
+
+```{.perl .numberLines}
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+open(my $fh, ">", "sample.txt") or die;
+print($fh "This is test file.", "\n");
+print($fh "書き込まれているでしょうか？", "\n");
+close($fh) or die;
+```
 
 ## 7. 練習問題
 
+### 1.
+
+実行結果を確認してみてください．
+改行が入ってしまっていませんか？
+ちゃんと入力した TODO が意図通りに追加されていましたか？
+
+### 2.
+
+これは，入力した値を使って演算を行う例です．
+
+以下の例だと，演算子の期待している入力になっていないと警告が出るかもしれません．
+例えば，`+` は，数値を期待しているので，"a" などを入力すると，
+`Argument "a" isn't numeric in ...` のような警告が出てしまうでしょう．
+これらを回避する方法もありますが，一旦は無視します．
+
+```{.perl .numberLines}
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+my $op1 = <STDIN>; # 入力を受け取る
+chomp($op1); # 入力された改行文字を削除する
+
+my $op2 = <STDIN>;
+chomp($op2);
+
+print($op1 + $op2, "\n");
+print($op1 - $op2, "\n");
+print($op1 * $op2, "\n");
+print($op1 / $op2, "\n");
+print($op1 . $op2, "\n");
+print($op1 x $op2, "\n");
+```
+
+### 3.
+
+半径を固定値ではなく，入力できるようにしたものです．
+
+```{.perl .numberLines}
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+# 入力
+my $r = <STDIN>;
+chomp($r);
+
+# 出力
+my $pi = 3.14;
+print("半径は ", 2 * $pi * $r, "\n");
+```
+
+### 4.
+
+```{.perl .numberLines}
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+# 入力
+open(my $rfh, "<", "ex7_4_in.txt") or die;
+my $op1 = <$rfh>;
+chomp($op1);
+my $op2 = <$rfh>;
+chomp($op2);
+close($rfh) or die;
+
+# 出力
+open(my $wfh, "<", "ex7_4_out.txt") or die;
+print($wfh $op1 + $op2, "\n");
+print($wfh $op1 * $op2, "\n");
+print($wfh $op1 x $op2, "\n");
+close($wfh) or die;
+```
+
+
 ## 8. 練習問題
+
+### 1.
+
+まっすぐ書くとこのようになります．
+
+```{.perl .numberLines}
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+open(my $fh, "<", "ex8_1_in.txt") or die;
+while (my $line = <$fh>) {
+    print($line);
+}
+close($fh) or die;
+```
+
+ファイル名を指定できるようにすると，以下のようになります．
+
+```{.perl .numberLines}
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+my $filename = <STDIN>;
+chomp($filename);
+
+open(my $fh, "<", $filename) or die;
+while (my $line = <$fh>) {
+    print($line);
+}
+close($fh) or die;
+```
+
+### 2.
+
+```{.perl .numberLines}
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+my $i = 1;
+while ($i <= 10) {
+    print($i, "\n");
+    $i = $i + 1;
+}
+```
+
+### 3.
+
+```{.perl .numberLines}
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+my $i = 1;
+my $sum = 0;
+while ($i <= 10) {
+    $sum = $sum + $i;
+    $i = $i + 1;
+}
+print($sum, "\n");
+```
+
+### 4.
+
+```{.perl .numberLines}
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+my $n = <STDIN>;
+chomp($n);
+
+my $i = 1;
+my $sum = 0;
+while ($i <= $n) {
+    $sum = $sum + $i;
+    $i = $i + 1;
+}
+print($sum, "\n");
+```
+
+### 5.
+
+素直に書くとこのようになるでしょう．
+
+```{.perl .numberLines}
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+my $input = <STDIN>;
+chomp($input);
+while ($input ne "quit") {
+    $input = <STDIN>;
+}
+print("end...", "\n");
+```
+
+<STDIN> というのを二回書きたくなかったら．
+スカラ変数が初期化時には，undef であることを利用して，
+以下のように書くこともできます．
+
+```{.perl .numberLines}
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+my $input;
+while (!defined($input) or $input ne "quit") {
+    $input = <STDIN>;
+}
+print("end...", "\n");
+```
 
 ## 9. 練習問題
 
+### 1.
+
+```{.perl .numberLines}
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+my @chars = ("alpha", "bravo", "charlie", "delta", "echo");
+my $i = 0;
+while ($i < 5) {
+    print($chars[$i], "\n");
+    $i = $i + 1;
+}
+```
+
+### 2.
+
+```{.perl .numberLines}
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+my $r = <STDIN>;
+chomp($r);
+if ($r < 0) {
+    $r = 0;
+}
+
+my $pi = 3.14;
+print(2 * $pi * $r, "\n");
+```
+
+### 3.
+
+`"0"` は，偽なので，`print()` は実行されません．
+
+### 4.
+
+```{.perl .numberLines}
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+open(my $fh, "<", "ex9_4_in.txt") or die;
+my $sum = 0;
+while (my $n = <$fh>) {
+    chomp($n);
+    $sum = $sum + $n;
+}
+close($fh) or die;
+
+print($sum, "\n");
+```
+
 ## 10. 練習問題
+
+### 1.
+
+```{.perl .numberLines}
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+# 入力
+my $ymd = <STDIN>;
+chomp($ymd);
+my ($y, $m, $d) = split(/,/, $in);
+
+# 出力
+print($y, "年", $m, "月", $d, "日です", "\n");
+```
+
+### 2.
+
+数値を読み込んで，配列の添字に使うことがわかればできます．
+リストの添字は，`0`から始まるので，入力する数字と1つずれていることに注意が必要です．
+
+```{.perl .numberLines}
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+my @names = ("fred", "betty", "dino", "wilma", "pebbles", "bamm-bamm");
+while (my $n = <STDIN>) {
+    chomp($n);
+    print $names[$n - 1]; # 添字とズレているので注意
+}
+```
 
 # 付録
 
