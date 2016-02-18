@@ -1,10 +1,12 @@
 highlight_style = tango
 
-build: slides.pdf
+BASE = perlguidetokai01
 
-slides.pdf: slides.md
+build: $(BASE).pdf
+
+$(BASE).pdf: $(BASE).md
 	pandoc -V documentclass=ltjarticle --latex-engine=lualatex -N --toc --highlight-style=$(highlight_style) -o $@ $<
 
 clean:
 	$(RM) $(RMF) *~
-	$(RM) $(RMF) slides.pdf
+	$(RM) $(RMF) $(BASE).pdf
