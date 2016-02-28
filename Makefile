@@ -1,12 +1,17 @@
 highlight_style = tango
 
-BASE = perlguidetokai01
+BASES = perlguidetokai01 perlguidetokai02
+PDFS = $(addsuffix .pdf,$(BASES))
 
-build: $(BASE).pdf
+build: pdf
 
-$(BASE).pdf: $(BASE).md
+pdf: $(PDFS)
+
+.SUFFIXES: .md .pdf
+
+.md.pdf:
 	pandoc -V documentclass=ltjarticle --latex-engine=lualatex -N --toc --highlight-style=$(highlight_style) -o $@ $<
 
 clean:
 	$(RM) $(RMF) *~
-	$(RM) $(RMF) $(BASE).pdf
+	$(RM) $(RMF) $(PDFS)
