@@ -723,7 +723,7 @@ chomp($num);
 # 一旦TODO リストの中身を読み込む
 open(my $rfh, "<", "todolist.txt") or die;
 my @lines;
-while (my $line = <$rfh>) {
+while (defined(my $line = <$rfh>)) {
     push(@lines, $line);
 }
 close($rfh) or die;
@@ -879,7 +879,7 @@ use warnings;
 # TODO リストを読み込んで，完了でないものだけ出力
 open(my $fh, "<", "todolist.txt") or die;
 my $count = 1;
-while (my $line = <$fh>) {
+while (defined(my $line = <$fh>) {
     chomp($line);
     my ($state, $content) = split(/,/, $line);
     if ($state ne "Done") {
@@ -1414,7 +1414,7 @@ use strict;
 use warnings;
 
 open(my $fh, "<", "ex8_1_in.txt") or die;
-while (my $line = <$fh>) {
+while (defined(my $line = <$fh>)) {
     print($line);
 }
 close($fh) or die;
@@ -1432,7 +1432,7 @@ my $filename = <STDIN>;
 chomp($filename);
 
 open(my $fh, "<", $filename) or die;
-while (my $line = <$fh>) {
+while (defined(my $line = <$fh>)) {
     print($line);
 }
 close($fh) or die;
@@ -1590,7 +1590,7 @@ use warnings;
 
 open(my $fh, "<", "ex9_4_in.txt") or die;
 my $sum = 0;
-while (my $n = <$fh>) {
+while (defined(my $n = <$fh>)) {
     chomp($n);
     $sum = $sum + $n;
 }
@@ -1609,7 +1609,7 @@ use warnings;
 
 open(my $fh, "<", "ex9_4_in.txt") or die;
 my $sum = 0;
-while (my $n = <$fh>) {
+while (defined(my $n = <$fh>)) {
     chomp($n);
     if ($n % 2 != 0) {
         $sum = $sum + $n;
@@ -1653,7 +1653,7 @@ use warnings;
 my @names = ("fred", "betty", "dino", "wilma", "pebbles", "bamm-bamm");
 
 my @indices;
-while (my $n = <STDIN>) {
+while (defined(my $n = <STDIN>)) {
     chomp($n);
     push(@indices, $n - 1);
 }
