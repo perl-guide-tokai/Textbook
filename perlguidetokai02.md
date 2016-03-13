@@ -387,7 +387,7 @@ done_testing(); # テストの終了を宣言
 移動する先は，一時的に作ったもので，最初は空の状態です．
 テストプログラムが終了したら自動的に削除されます．
 
-## 解説
+## 解説1
 
 ### File::Temp モジュール
 
@@ -531,7 +531,7 @@ print($localvar);
 影響範囲がわかりやすいので，*スコープ* をできるだけ小さくすると
 プログラムが読み易くなります．
 
-## 練習問題
+## 練習問題1
 
 1. `File::Temp::tempdir()` という形式で 10\_directory\_test.pl を書き直してみましょう．同じ動作になりましたでしょうか？
 2. 10_directory_test.pl を描き直して，`is()` 関数を使って，
@@ -615,7 +615,7 @@ done_testing();
 そのファイルハンドルへの出力が，
 別のコマンドへの入力に繋がっている状態を作ります．
 
-```
+```{.numberLines}
 プログラム
 (ファイルハンドルへの print)
 　　↓↓↓
@@ -623,7 +623,7 @@ done_testing();
 (ファイルハンドルから <>)
 ```
 
-逆パターンで，``` `` ``` (バッククォート)演算子は，
+逆に，``` `` ``` (バッククォート)演算子は，
 別のコマンドの出力をプログラムで受け取ることができました．
 これもパイプを使って書くこともできます．
 
@@ -633,7 +633,284 @@ done_testing();
 ## 問題提起
 
 `03_list_todo.t` と `04_add_todo.t` を見比べてください．
-あまりにも同じ部分が多過ぎる気がしませんか？
+同じ部分が多い気がしませんか？
+
+1. ファイル名から，フルパス名(現在のディレクトリを追加したファイル名)を得る部分
+2. 一時ディレクトリに移動する部分
+
+## 書き換え
+
+### 処理を別ファイルに移動する
+
+`03_init_todo.t` を使います．
+
+まず，現在のディレクトリを付与したファイル名を得る部分から．
+
+この章では，長くなるのでコードはポイントだけ書くことにします．
+
+```{.perl .numberLines}
+my $program_filename = "03_init_todo.pl";
+my $pwd = cwd();
+my $program_fullpath = join("/", $pwd, $program_filename);
+```
+
+ブロックにする
+
+```{.perl .numberLines}
+# 実行するファイル名を指定する
+{
+    my $program_filename = "03_init_todo.pl";
+    my $pwd = cwd();
+    my $program_fullpath = join("/", $pwd, $program_filename);
+}
+```
+
+これだと，`$program_fullpath` 変数が後で使えないので，
+`my` 宣言だけ外に出します．
+
+```{.perl .numberLines}
+# 実行するファイル名を指定する
+my $program_fullpath;
+{
+    my $program_filename = "03_init_todo.pl";
+    my $pwd = cwd();
+    $program_fullpath = join("/", $pwd, $program_filename);
+}
+```
+
+名前を付けて，それを呼び出すようにします．
+
+```{.perl .numberLines}
+# 実行するファイル名を指定する
+my $program_fullpath = fullpath();
+sub fullpath {
+    my $program_filename = "03_init_todo.pl";
+    my $pwd = cwd();
+    return join("/", $pwd, $program_filename);
+}
+```
+
+入力も外側に出す．
+
+```{.perl .numberLines}
+# 実行するファイル名を指定する
+my $program_filename = "03_init_todo.pl";
+my $program_fullpath = fullpath($program_filename);
+sub fullpath {
+    my ($program_filename) = @_;
+    my $pwd = cwd();
+    return join("/", $pwd, $program_filename);
+}
+```
+
+別ファイルに書いて，それを呼び出します．
+
+MyTestUtil.pm
+
+```{.perl .numberLines}
+package MyTestUtil;
+
+use strict;
+use warnings;
+
+use Cwd;
+
+sub fullpath {
+    my ($program_filename) = @_;
+    my $pwd = cwd();
+    return join("/", $pwd, $program_filename);
+}
+
+1;
+```
+
+03_add_todo.pl 抜粋
+
+```{.perl .numberLines}
+# 実行するファイル名を指定する
+my $program_filename = "03_init_todo.pl";
+my $program_fullpath = fullpath($program_filename);
+```
+
+できあがったプログラムを再掲します．
+
+### 03_init_todo2.t
+
+```{.perl .numberLines}
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+use Test::More; # is() / done_testing() 関数を使うために必要
+use File::Temp ("tempdir"); # tempdir() 関数を使うために必要
+
+use MyTestUtil;
+
+# 実行するファイル名を指定する
+my $program_filename = "03_init_todo.pl";
+my $program_fullpath = MyTestUtil::fullpath($program_filename);
+
+# todolist.txt を出力するための一時ディレクトリを作成し，実行し，結果を比較する
+# (この一時ディレクトリは自動的に削除される)
+{
+    # 一時ディレクトリの作成
+    my $tmp_dirname = tempdir(CLEANUP => 1);
+
+    # プログラムの実行
+    chdir($tmp_dirname) or die; # 現在のディレクトリを一時ディレクトリにする
+    `$program_fullpath`; # プログラムの実行
+
+    # 実行結果の取り出し
+    open(my $fh, "<", "$tmp_dirname/todolist.txt") or die;
+    my $got = join("", <$fh>);
+    close($fh) or die;
+
+    # 実際の値(got)と期待する結果(expected) を比較
+    my $expected = "sample todo\n"; # 期待する結果
+    is($got, $expected);
+}
+
+done_testing(); # テストの終了を宣言
+```
+
+### 04_add_todo2.t
+
+```{.perl .numberLines}
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+use Test::More;
+use File::Temp ("tempdir");
+
+use MyTestUtil;
+
+my $program_filename = "04_add_todo.pl";
+my $program_fullpath = MyTestUtil::fullpath($program_filename);
+
+{
+    my $tmp_dirname = tempdir(CLEANUP => 1);
+    chdir($tmp_dirname) or die;
+
+    my $new_todo_content = "append new todo";
+    open(my $wfh, "|-", $program_fullpath) or die;
+    print($wfh $new_todo_content, "\n");
+    close($wfh) or die;
+
+    my $output_filename = join("/", $tmp_dirname, "todolist.txt");
+    open(my $rfh, "<", $output_filename) or die;
+    my $got = join("", <$rfh>);
+    close($rfh) or die;
+
+    my $expected = $new_todo_content . "\n";
+    is($got, $expected);
+}
+
+done_testing();
+```
+
+### MyTestUtil.pm
+
+```{.perl .numberLines}
+package MyTestUtil;
+
+use strict;
+use warnings;
+
+use Cwd;
+
+sub fullpath {
+    my ($program_filename) = @_;
+    my $pwd = cwd();
+    return join("/", $pwd, $program_filename);
+}
+
+1;
+```
+
+## 解説
+
+### 関数の書き方
+
+関数は用意されているもの(`open()`, `print()` など) もありますが，
+自分で書くこともできます．
+
+関数は，ブロックに名前を付けたものです．
+ブロックなので，複数の命令を束ねて意味を表すことができます．
+
+`sub` キーワードを使って，`sub + 関数名 + ブロック` の形式で，
+関数を定義できます．
+
+関数の引数は，自動的に `@_` 変数に入ります．
+
+`func(1, 2, 3)` のように呼び出せば，`@_ = (1, 2, 3)` になります．
+
+関数の戻り値は，`return` で指定します．
+
+関数は，`return` を実行すると，残りの処理を飛ばして，
+呼び出し元に戻ります．
+
+サンプル
+
+```{.perl .numberLines}
+sub func_name {
+    my ($arg1, $arg2, @arg_array) = @_;
+
+    return join($arg1, $arg2, @arg_array);
+}
+```
+
+### モジュールの書き方
+
+いくつか覚えておく必要があります．
+
+Perl では，別ファイルの機能を使うのに，モジュールという仕組みを使います．
+`Test::More`, `File::Temp` などは，Perl が標準で用意しているモジュールです．
+
+自分でモジュールを書くこともできます．
+
+モジュール名と拡張子`.pm` が，ファイル名と同じでなければいけません．
+`MyTestUtil` というモジュール名なら，ファイル名は `MyTestUtil.pm` です．
+
+モジュールファイルの先頭で `package` 宣言をします．これもモジュール名です．
+
+モジュールファイルの最後に，`1;` を書きます．
+
+モジュールを `use` したときに，成功したら真を返すことになっています．
+エラーになった場合は，偽を返すことになっています．
+
+モジュールの書き方(MyTestUtil モジュール)
+
+```{.perl .numberLines}
+package MyTestUtil;
+
+sub fullpath {
+  ...
+}
+
+1;
+```
+
+使い方
+
+```{.perl .numberLines}
+
+use MyTestUtil;
+
+my $ret = MyTestUtil::fullpath($arg);
+
+```
+
+モジュールの中の関数は，モジュール名と `::` を先頭に付けて呼び出せます．
+
+今まで，モジュールの中の関数は，
+モジュール名を指定しないで呼び出していました．
+
+## 練習問題
+
+
 
 ---
 
