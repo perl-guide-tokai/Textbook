@@ -567,6 +567,74 @@ print($v2);
 }
 ```
 
+## TODO リストを追加するプログラムをテストする
+
+### 04_add_todo.t
+
+```{.perl .numberLines}
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+use Test::More;
+use File::Temp ("tempdir");
+use Cwd;
+
+my $program_filename = "04_add_todo.pl";
+my $cwd = cwd();
+my $program_fullpath = join("/", $cwd, $program_filename);
+
+{
+    my $tmp_dirname = tempdir(CLEANUP => 1);
+    chdir($tmp_dirname) or die;
+
+    my $new_todo_content = "append new todo";
+    open(my $wfh, "|-", $program_fullpath) or die;
+    print($wfh $new_todo_content, "\n");
+    close($wfh) or die;
+
+    my $output_filename = join("/", $tmp_dirname, "todolist.txt");
+    open(my $rfh, "<", $output_filename) or die;
+    my $got = join("", <$rfh>);
+    close($rfh) or die;
+
+    my $expected = $new_todo_content . "\n";
+    is($got, $expected);
+}
+
+done_testing();
+```
+
+## 解説2
+
+### open の 入力モード
+
+`open()` 関数のモードが，`"|-"` になっています．
+これは，パイプと呼ばれて，
+そのファイルハンドルへの出力が，
+別のコマンドへの入力に繋がっている状態を作ります．
+
+```
+プログラム
+(ファイルハンドルへの print)
+　　↓↓↓
+別コマンドへの入力
+(ファイルハンドルから <>)
+```
+
+逆パターンで，``` `` ``` (バッククォート)演算子は，
+別のコマンドの出力をプログラムで受け取ることができました．
+これもパイプを使って書くこともできます．
+
+`open()` 関数を使うと長くなるので，
+本テキストでは``` `` ``` を優先して使っています．
+
+## 問題提起
+
+`03_list_todo.t` と `04_add_todo.t` を見比べてください．
+あまりにも同じ部分が多過ぎる気がしませんか？
+
 ---
 
 # 機能追加
