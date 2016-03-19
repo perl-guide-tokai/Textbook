@@ -254,7 +254,7 @@ not ok 1 - test for stdout
 機能はそれぞれのモジュール毎に異なります．
 モジュール名は大抵大文字から始まります(例: `Test::More`)．
 `strict`, `warnings` は，プラグマ(pragma) といってモジュールとは異なりますが，
-プログラムに機能を追加するという点では同じものです．
+`use` を使う点，プログラムに機能を追加するという点では同じものです．
 
 ### Test::More モジュール
 
@@ -301,7 +301,7 @@ not ok 1 - test for stdout
 
 ---
 
-# TODO リストプログラムを確認するためのテストプログラムを書く
+# プログラムの動作を確認するプログラム
 
 前回のテキストで作った以下のプログラムの動作を確認するテストプログラムを書きます．
 
@@ -343,7 +343,7 @@ my $program_fullpath = join("/", $cwd, $program_filename);
     `$program_fullpath`; # プログラムの実行
 
     # 実行結果の取り出し
-    open(my $fh, "<", "$tmp_dirname/todolist.txt") or die;
+    open(my $fh, "<", "todolist.txt") or die;
     my $got = join("", <$fh>);
     close($fh) or die;
 
@@ -387,7 +387,7 @@ done_testing(); # テストの終了を宣言
 移動する先は，一時的に作ったもので，最初は空の状態です．
 テストプログラムが終了したら自動的に削除されます．
 
-## 解説1
+## 解説
 
 ### File::Temp モジュール
 
@@ -396,7 +396,8 @@ done_testing(); # テストの終了を宣言
 `use File::Temp ("tempdir")` という書き方は，`"tempdir"` を使えるようにしています．
 
 これがあると，`tempdir()` 関数を，`tempdir()` として呼べます．
-これが無くとも，`File::Temp::tempdir()` という名前で関数を呼び出すことができますが，
+これが無くとも，`モジュール名 + :: + 関数名()` の形式，
+`File::Temp::tempdir()` で関数を呼び出すことができます．
 長いので，短く呼べるようにしました．
 
 今までのモジュール(例えば，`Test::More`)では，
@@ -408,12 +409,12 @@ done_testing(); # テストの終了を宣言
 `モジュール名::関数名()` の形式で呼び出すためには，
 `use` 時に引数を与える必要があるモジュールもあります．
 
-モジュールによって指定できるものが異なります．
+引数として何を与えることができるかはモジュールによって異なります．
 詳しくは，各モジュールのドキュメントを参照してください．
 
 tempdir() 関数
 
-:   一時ディレクトリを作成して，ディレクトリ名[^return_tempdir]を返します．
+:   一時ディレクトリを作成して，ディレクトリ名を返します．
     引数の `CLEANUP => 1` は，作成した一時ディレクトリを後で自動的に削除する
     ことを関数に伝えています．
 
@@ -422,15 +423,14 @@ tempdir() 関数
     `CLEANUP => 1` は，`"CLEANUP", 1` と同じです．
     少し短かく書けます．
 
-    この場合の `1` は，ブーリアンの真の意味で，
+    この場合の `1` は，真偽値の真の意味で，
     `CLEANUP => 1` で `CLEANUP` が 真 である．という意図を表現しています．
-
-[^return_tempdir]: 正確にはディレクトリ名ではありません．作成されたディレクトリ名を返します．
 
 ### chdir() 関数
 
 現在のディレクトリを変更します．
-変更したディレクトリは，プログラムが終了すれば戻ります．
+
+プログラムが終了すれば，現在のディレクトリは，元に戻ります．
 
 ### Cwd モジュール
 
@@ -480,15 +480,18 @@ $ pwd         # Windows だと cd
 
 ブロックは，`while` では，その部分だけ繰り返し実行されたり，
 `if` では，その部分だけ実行される，されない，の対象になっています．
-複数のプログラムの命令文を1まとめにする機能があります．
+ブロックは，複数のプログラムの命令文を1まとめにします．
 
 読み易さのために，ブロックの中は，ブロックの外よりも先頭に空白文字を入れる *字下げ* を入れるようにします．
-字下げは，エディタの機能のままでも良いですが，
+*字下げ* は，エディタの機能のままでも良いですが，
 そのような機能が無いエディタを使っている場合には，
-スペースを4つと決めておくと良いでしょう．
+1つ分の字下げがスペースを4つと決めて編集すると良いでしょう．
 ブロックが，1つのかたまりを構成することを示すためです．
 
-`while` や `if` などが無い部分にも使うことができます．
+ブロックの中にブロックがあれば，その内側のブロックは，2つ分の字下げを入れます．
+これは，`while` の内側の `if` などで使ってきました．
+
+ブロックは，`while` や `if` などが無い部分にも使うことができます．
 そこまで意味はありませんが，字下げが入るので，
 1つのまとまりを表現するのに便利です．
 
@@ -531,9 +534,9 @@ print($localvar);
 影響範囲がわかりやすいので，*スコープ* をできるだけ小さくすると
 プログラムが読み易くなります．
 
-## 練習問題1
+## 練習問題
 
-1. `File::Temp::tempdir()` という形式で 10\_directory\_test.pl を書き直してみましょう．同じ動作になりましたでしょうか？
+1. `File::Temp::tempdir()` という形式で 10\_directory\_test.pl を書き直してみましょう．同じ動作になりましたか？
 2. 10_directory_test.pl を描き直して，`is()` 関数を使って，
 `chdir()`の動作を確認するようにしてみましょう．
 3. ブロックを使って，変数の有効範囲を確かめてみましょう．
@@ -567,7 +570,11 @@ print($v2);
 }
 ```
 
+# プログラムの共通部分をまとめる
+
 ## TODO リストを追加するプログラムをテストする
+
+この調子で，TODO を追加するプログラムをテストするプログラムを書いてみましょう．
 
 ### 04_add_todo.t
 
@@ -594,8 +601,7 @@ my $program_fullpath = join("/", $cwd, $program_filename);
     print($wfh $new_todo_content, "\n");
     close($wfh) or die;
 
-    my $output_filename = join("/", $tmp_dirname, "todolist.txt");
-    open(my $rfh, "<", $output_filename) or die;
+    open(my $rfh, "<", "todolist.txt") or die;
     my $got = join("", <$rfh>);
     close($rfh) or die;
 
@@ -606,7 +612,7 @@ my $program_fullpath = join("/", $cwd, $program_filename);
 done_testing();
 ```
 
-## 解説2
+## 解説
 
 ### open の 入力モード
 
@@ -616,11 +622,11 @@ done_testing();
 別のコマンドへの入力に繋がっている状態を作ります．
 
 ```{.numberLines}
-プログラム
-(ファイルハンドルへの print)
+・元プログラム
+    ファイルハンドルへの出力(print)
 　　↓↓↓
-別コマンドへの入力
-(ファイルハンドルから <>)
+・別コマンドへの入力
+    ファイルハンドルから入力(<>)
 ```
 
 逆に，``` `` ``` (バッククォート)演算子は，
@@ -637,74 +643,97 @@ done_testing();
 
 1. ファイル名から，フルパス名(現在のディレクトリを追加したファイル名)を得る部分
 2. 一時ディレクトリに移動する部分
-3. データファイルの内容を取り出す部分
+3. データファイルの内容を取り出して，期待通りか確認する部分
 
-## 書き換え
+プログラムを共通化して使う方法について学びましょう．
+
+## プログラムの共通部分 - fullpath()
 
 ### 処理を別ファイルに移動する
 
-`03_init_todo.t` を使います．
+まずは，`03_init_todo.t` を見てみます．
 
-まず，現在のディレクトリを付与したファイル名を得る部分から．
+現在のディレクトリを付与したファイル名を得る部分から考えましょう．
 
-この章では，長くなるのでコードはポイントだけ書くことにします．
+この節では，長くなるのでコードはポイントだけ書くことにします．
 
 ```{.perl .numberLines}
 my $program_filename = "03_init_todo.pl";
-my $pwd = cwd();
-my $program_fullpath = join("/", $pwd, $program_filename);
+my $cwd = cwd();
+my $program_fullpath = join("/", $cwd, $program_filename);
 ```
 
-ブロックにする
+まず，どの部分がポイントかわかりやすいように，
+一旦ブロックの中に閉じ込めてみます(この時点では，実行できません)．
 
 ```{.perl .numberLines}
 # 実行するファイル名を指定する
 {
     my $program_filename = "03_init_todo.pl";
-    my $pwd = cwd();
-    my $program_fullpath = join("/", $pwd, $program_filename);
+    my $cwd = cwd();
+    my $program_fullpath = join("/", $cwd, $program_filename);
 }
 ```
 
 これだと，`$program_fullpath` 変数が後で使えないので，
-`my` 宣言だけ外に出します．
+`my` の変数宣言だけ外に出します．
 
 ```{.perl .numberLines}
 # 実行するファイル名を指定する
 my $program_fullpath;
 {
-    my $program_filename = "03_init_todo.pl";
-    my $pwd = cwd();
-    $program_fullpath = join("/", $pwd, $program_filename);
+    $program_filename = "03_init_todo.pl";
+    my $cwd = cwd();
+    $program_fullpath = join("/", $cwd, $program_filename);
 }
 ```
 
-名前を付けて，それを呼び出すようにします．
+ブロックに名前を付けて，それを呼び出す形式にします．
+`sub` の部分は，ブロックに名前を付けています．
+名前を付けられたブロックは*関数* です．
+関数の書き方については後で説明します．
+
+関数を定義しているものを先に書くように順序を入れ替えました．
+関数は使う前に定義されていなければいけないからです．
 
 ```{.perl .numberLines}
 # 実行するファイル名を指定する
+sub fullpath { # 関数化
+    my $program_filename = "03_init_todo.pl";
+    my $cwd = cwd();
+    return join("/", $cwd, $program_filename);
+}
+
 my $program_fullpath = fullpath();
-sub fullpath {
-    my $program_filename = "03_init_todo.pl";
-    my $pwd = cwd();
-    return join("/", $pwd, $program_filename);
-}
 ```
 
-入力も外側に出す．
+このままでは，ファイル名の部分が固定になってしまいます．
+`04_add_todo.t` でも使うことを考えているので，
+ファイル名が変更できるように，関数の外側に出します．
+関数はファイル名を受け取れるような形式に書き換えます．
 
 ```{.perl .numberLines}
 # 実行するファイル名を指定する
+sub fullpath {
+    my ($program_filename) = @_; # 引数を受け取る
+    my $cwd = cwd();
+    return join("/", $cwd, $program_filename);
+}
 my $program_filename = "03_init_todo.pl";
 my $program_fullpath = fullpath($program_filename);
-sub fullpath {
-    my ($program_filename) = @_;
-    my $pwd = cwd();
-    return join("/", $pwd, $program_filename);
-}
 ```
 
-別ファイルに書いて，それを呼び出します．
+`04_add_todo.t` でも使えるようにするため，
+`03_init_todo.t` とも別のファイルを作り，
+`03_init_todo.t` からそこに関数を移動します．
+
+このときに，`Cwd` モジュールの `use` も一緒に移動します．
+何故ならば，`fullpath()` 関数の中で `cwd()` 関数を使っているからです．
+
+共通化するためのファイルには書き方がありますので，
+これも関数と同様に後で説明します．
+
+とりあえず以下のように書けば，`use MyTestUtil` できるようになります．
 
 MyTestUtil.pm
 
@@ -716,16 +745,25 @@ use warnings;
 
 use Cwd;
 
+use Exporter ("import");
+our @EXPORT_OK = ("fullpath");
+
 sub fullpath {
     my ($program_filename) = @_;
-    my $pwd = cwd();
-    return join("/", $pwd, $program_filename);
+    my $cwd = cwd();
+    return join("/", $cwd, $program_filename);
 }
 
 1;
 ```
 
-03_add_todo.pl 抜粋
+`03_add_todo.pl` は，関数を移動されたので，スッキリしました．
+`use Cwd` も削除します．
+
+```{.perl .numberLines}
+# use Cwd を削除
+use MyTestUtil ("fullpath"); # use MyTestUtil を追加
+```
 
 ```{.perl .numberLines}
 # 実行するファイル名を指定する
@@ -733,9 +771,12 @@ my $program_filename = "03_init_todo.pl";
 my $program_fullpath = fullpath($program_filename);
 ```
 
-できあがったプログラムを再掲します．
+また，`04_add_todo.t` も同じような編集をして
+ `fullpath()` 関数を使うようにします．
 
-### 03_init_todo2.t
+できあがったプログラム全体を載せます．
+
+### 03_init_todo.t - fullpath 適用後
 
 ```{.perl .numberLines}
 #!/usr/bin/env perl
@@ -746,11 +787,11 @@ use warnings;
 use Test::More; # is() / done_testing() 関数を使うために必要
 use File::Temp ("tempdir"); # tempdir() 関数を使うために必要
 
-use MyTestUtil;
+use MyTestUtil ("fullpath");
 
 # 実行するファイル名を指定する
 my $program_filename = "03_init_todo.pl";
-my $program_fullpath = MyTestUtil::fullpath($program_filename);
+my $program_fullpath = fullpath($program_filename);
 
 # todolist.txt を出力するための一時ディレクトリを作成し，実行し，結果を比較する
 # (この一時ディレクトリは自動的に削除される)
@@ -763,7 +804,7 @@ my $program_fullpath = MyTestUtil::fullpath($program_filename);
     `$program_fullpath`; # プログラムの実行
 
     # 実行結果の取り出し
-    open(my $fh, "<", "$tmp_dirname/todolist.txt") or die;
+    open(my $fh, "<", "todolist.txt") or die;
     my $got = join("", <$fh>);
     close($fh) or die;
 
@@ -775,7 +816,7 @@ my $program_fullpath = MyTestUtil::fullpath($program_filename);
 done_testing(); # テストの終了を宣言
 ```
 
-### 04_add_todo2.t
+### 04_add_todo.t - fullpath 適用後
 
 ```{.perl .numberLines}
 #!/usr/bin/env perl
@@ -786,10 +827,10 @@ use warnings;
 use Test::More;
 use File::Temp ("tempdir");
 
-use MyTestUtil;
+use MyTestUtil ("fullpath");
 
 my $program_filename = "04_add_todo.pl";
-my $program_fullpath = MyTestUtil::fullpath($program_filename);
+my $program_fullpath = fullpath($program_filename);
 
 {
     my $tmp_dirname = tempdir(CLEANUP => 1);
@@ -800,8 +841,7 @@ my $program_fullpath = MyTestUtil::fullpath($program_filename);
     print($wfh $new_todo_content, "\n");
     close($wfh) or die;
 
-    my $output_filename = join("/", $tmp_dirname, "todolist.txt");
-    open(my $rfh, "<", $output_filename) or die;
+    open(my $rfh, "<", "todolist.txt") or die;
     my $got = join("", <$rfh>);
     close($rfh) or die;
 
@@ -822,14 +862,28 @@ use warnings;
 
 use Cwd;
 
+our @ISA = ("Exporter");
+our @EXPORT_OK = ("fullpath");
+
 sub fullpath {
     my ($program_filename) = @_;
-    my $pwd = cwd();
-    return join("/", $pwd, $program_filename);
+    my $cwd = cwd();
+    return join("/", $cwd, $program_filename);
 }
 
 1;
 ```
+
+そこまで短くなっていないですが，以上が複数ファイルにまたがるような，
+処理の共通化，関数化の例です．
+
+処理を共通化することで，処理が短くなったり，
+同じ処理は同じ名前(関数名)で呼び出せるようになります．
+
+関数化しておくと，自分の意図していた複数の処理のかたまり(ブロック)に名前を付けることができ，
+実際にその名前で呼び出すことができます．
+又，その名前が表すものが，思っていたことと違っていたら，
+関数の中身を編集することで，それを呼び出している部分全部に反映されます．
 
 ## 解説
 
@@ -838,15 +892,16 @@ sub fullpath {
 関数は用意されているもの(`open()`, `print()` など) もありますが，
 自分で書くこともできます．
 
-関数は，ブロックに名前を付けたものです．
-ブロックなので，複数の命令を束ねて意味を表すことができます．
+関数は，変数が値に名前を付けたものだったように，ブロックに名前を付けたものです．
+ブロックは複数の命令を束ねているので，
+関数名はその命令群の意味や意図を表す名前を付けます．
 
 `sub` キーワードを使って，`sub + 関数名 + ブロック` の形式で，
 関数を定義できます．
 
 関数の引数は，自動的に `@_` 変数に入ります．
 
-`func(1, 2, 3)` のように呼び出せば，`@_ = (1, 2, 3)` になります．
+`func(1, 2, 3)` のように呼び出せば，`@_` の中身は `(1, 2, 3)` になります．
 
 関数の戻り値は，`return` で指定します．
 
@@ -856,31 +911,44 @@ sub fullpath {
 サンプル
 
 ```{.perl .numberLines}
+# 関数定義
 sub func_name {
     my ($arg1, $arg2, @arg_array) = @_;
 
     return join($arg1, $arg2, @arg_array);
 }
+
+# 関数呼び出し
+print(func_name("-", 2, "a", "b", "c")); # => "2-a-b-c"
 ```
+
+`my ($arg1, $arg2, ...) = @_;` のような引数を受け取る書き方は，
+よく使うので覚えておきましょう．
+
+又，関数は呼び出す前に定義されていなければ呼び出せません．
+モジュールの中に書けば，自然とそうなるので，
+モジュールの中に関数を書いているうちは，あまり気にすることはありません．
 
 ### モジュールの書き方
 
-いくつか覚えておく必要があります．
+いくつか覚えておくことがあります．
 
 Perl では，別ファイルの機能を使うのに，モジュールという仕組みを使います．
 `Test::More`, `File::Temp` などは，Perl が標準で用意しているモジュールです．
 
 自分でモジュールを書くこともできます．
 
-モジュール名と拡張子`.pm` が，ファイル名と同じでなければいけません．
+ファイル名は，`モジュール名 + .pm` でなければなりません．
 `MyTestUtil` というモジュール名なら，ファイル名は `MyTestUtil.pm` です．
 
-モジュールファイルの先頭で `package` 宣言をします．これもモジュール名です．
+モジュールファイルの先頭で `package + モジュール名` の形式で，宣言をします．
 
-モジュールファイルの最後に，`1;` を書きます．
+モジュールファイルの最後には，`1;` を書きます．
 
-モジュールを `use` したときに，成功したら真を返すことになっています．
+モジュールは `use` されたら，パッケージファイルが実行されますが，
+成功したら真を返すことになっていて，
 エラーになった場合は，偽を返すことになっています．
+それが最後に，`1;` を書く理由です．
 
 モジュールの書き方(MyTestUtil モジュール)
 
@@ -897,11 +965,9 @@ sub fullpath {
 使い方
 
 ```{.perl .numberLines}
-
 use MyTestUtil;
 
 my $ret = MyTestUtil::fullpath($arg);
-
 ```
 
 モジュールの中の関数は，モジュール名と `::` を先頭に付けて呼び出せます．
@@ -909,20 +975,370 @@ my $ret = MyTestUtil::fullpath($arg);
 今まで，モジュールの中の関数は，
 モジュール名を指定しないで呼び出していました．
 
+### Exporter モジュール
+
+関数を `モジュール名 + :: + 関数名()` ではなく，
+`関数名()` の形式で呼び出せるようにするために使っています．
+
+以下の形式を今後も使うので，覚えておくと良いでしょう．
+
+```{.perl .numberLines}
+package YourPackage;
+# パッケージ側
+use Exporter ("import");
+our @EXPORT_OK = ("func1");
+```
+
+```{.perl .numberLines}
+# 呼び出し側
+use YourPackage ("func1");
+
+func1();
+```
+
+### MyTestUtil モジュール(自作)
+
+今回作ったモジュールは，テストプログラムを書くためのパーツを集めたものです．
+
+今のところ1つの関数しかありません．
+
+fullpath() 関数
+
+:    1つめの引数はプログラムファイル名で，
+     現在のディレクトリと連結することで，絶対パス形式の文字列を返します．
+
+     `chdir()` を使った場合などで，いつものディレクトリと違うう場所から
+     目的のプログラムを呼び出すときに便利です．
+
+## プログラムの共通部分 - chtempdir()
+
+### 処理を別ファイルに移動する
+
+もう少し共通部分を増やしてみましょう．
+
+まずは，`03_init_todo.t` を見てみます．
+
+一時ディレクトリを作成して，そこに移動するまでを関数にしてみましょう．
+
+この節でも，コードはポイントを抑えて書くことにします．
+
+```{.perl .numberLines}
+{
+    my $tmp_dirname = tempdir(CLEANUP => 1);
+
+    chdir($tmp_dirname) or die;
+```
+
+この2行がそれ対象の部分です．
+
+まずは，ブロックにしてみましょう．
+
+```{.perl .numberLines}
+{
+    {
+        my $tmp_dirname = tempdir(CLEANUP => 1);
+
+        chdir($tmp_dirname) or die;
+    }
+```
+
+例によって，使う前に関数定義しています．
+
+```{.perl .numberLines}
+sub chtempdir {
+    my $tmp_dirname = tempdir(CLEANUP => 1);
+    chdir($tmp_dirname) or die;
+}
+
+{
+    chtempdir();
+    :
+```
+
+これを `MyTestUtil` モジュールに移動します．
+
+```{.perl .numberLines}
+# use File::Temp ("tempdir"); の削除
+use MyTestUtil ("fullpath", "chtempdir"); # 関数を追加
+```
+
+```{.perl .numberLines}
+{
+    chtempdir();
+    :
+```
+
+MyTestUtil.pm には，関数の移動の他に
+関数内部で使っているモジュールの移動，
+`@EXPORT_OK` の追加をします．
+
+```{.perl .numberLines}
+use File::Temp ("tempdir");
+
+(中略)
+
+our @EXPORT_OK = ("fullpath", "chtempdir");
+
+(中略)
+
+sub chtempdir {
+    my $temporary_directory = tempdir(CLEANUP => 1);
+    chdir($temporary_directory) or die;
+}
+```
+
+これで，`chtempdir()` 関数の移動は完了です．
+
+`04_add_todo.t` も同じような編集をして，
+`chtempdir()` 関数を使うようにします．
+
+できあがったプログラム全体を載せます．
+
+### 03_init_todo.t - chtempdir 適用後
+
+```{.perl .numberLines}
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+use Test::More; # is() / done_testing() 関数を使うために必要
+
+use MyTestUtil ("fullpath", "chtempdir");
+
+# 実行するファイル名を指定する
+my $program_filename = "03_init_todo.pl";
+my $program_fullpath = fullpath($program_filename);
+
+# todolist.txt を出力するための一時ディレクトリを作成し，実行し，結果を比較する
+# (この一時ディレクトリは自動的に削除される)
+{
+    # 一時ディレクトリの作成
+    chtempdir();
+
+    # プログラムの実行
+    `$program_fullpath`; # プログラムの実行
+
+    # 実行結果の取り出し
+    open(my $fh, "<", "todolist.txt") or die;
+    my $got = join("", <$fh>);
+    close($fh) or die;
+
+    # 実際の値(got)と期待する結果(expected) を比較
+    my $expected = "sample todo\n"; # 期待する結果
+    is($got, $expected);
+}
+
+done_testing(); # テストの終了を宣言
+```
+
+### 04_add_todo.t - chtempdir 適用後
+
+```{.perl .numberLines}
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+use Test::More;
+
+use MyTestUtil ("fullpath", "chtempdir");
+
+my $program_filename = "04_add_todo.pl";
+my $program_fullpath = fullpath($program_filename);
+
+{
+    chtempdir();
+
+    my $new_todo_content = "append new todo";
+    open(my $wfh, "|-", $program_fullpath) or die;
+    print($wfh $new_todo_content, "\n");
+    close($wfh) or die;
+
+    open(my $rfh, "<", "todolist.txt") or die;
+    my $got = join("", <$rfh>);
+    close($rfh) or die;
+
+    my $expected = $new_todo_content . "\n";
+    is($got, $expected);
+}
+
+done_testing();
+```
+
+### MyTestUtil.pm - chtempdir 適用後
+
+```{.perl .numberLines}
+package MyTestUtil;
+
+use strict;
+use warnings;
+
+use Cwd;
+use File::Temp ("tempdir");
+
+use Exporter ("import");
+our @EXPORT_OK = ("fullpath", "chtempdir");
+
+sub fullpath {
+    my ($program_filename) = @_;
+    my $pwd = cwd();
+    return join("/", $pwd, $program_filename);
+}
+
+sub chtempdir {
+    my $temporary_directory = tempdir(CLEANUP => 1);
+    chdir($temporary_directory) or die; # 現在のディレクトリを一時ディレクトリにする
+    return $temporary_directory;
+}
+
+1;
+```
+
 ## 練習問題
 
 1. 円周を計算する関数 `circumference_of_circle()` (引数: 半径，戻り値: 円周) を書いてみましょう．
 半径を入力して，円周を出力するプログラムを書いてみましょう．
-2. モジュール `Math` を作り，円周を作る関数，円の面積を作る関数 `area_of_circle()` (引数: 半径，戻り値: 面積) を書いてみましょう．
+2. モジュール `Math` を作り，その中に円周を作る関数，円の面積を作る関数 `area_of_circle()` (引数: 半径，戻り値: 面積) を書いてみましょう．
 半径を入力して，円周と面積を出力するプログラムから`Math` モジュールを使ってみましょう．
-3. `chtempdir()` という関数(引数: なし，戻り値: ディレクトリ名)を `MyTestUtil` モジュール内に作り，それぞれのテストで使うようにしなさい．
-4. `05_list_todo.t`, `06_list_todo.t`, `07_list_notyet_todo.t` を作りましょう．
-5. それぞれのテストプログラムで共通化できる部分があったら，`MyTestUtil` モジュールに移動してみましょう．
+3. `is_todolist_content()` という関数(引数: $expected, $message，戻り値: なし)を `MyTestUtil` モジュール内に作り，それぞれのテストで使うようにしなさい．
+
+# 共通部分を使ってプログラムを書いてみる
+
+## TODO リストを表示するプログラムをテストする
+
+`05_list_todo.t` を書いてみましょう．
+
+### 05_add_todo.t
+
+```{.perl .numberLines}
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+use Test::More;
+
+use MyTestUtil ("fullpath", "chtempdir");
+
+my $program_filename = "05_list_todo.pl";
+my $program_fullpath = fullpath($program_filename);
+
+{
+    # 準備
+    chtempdir();
+
+    open(my $wfh, ">", "todolist.txt") or die;
+    print($wfh "some todos", "\n");
+    print($wfh "todo2", "\n");
+    close($wfh) or die;
+
+    # 実行
+    my $got = `$program_fullpath`;
+
+    # 結果比較
+    my $expected = join("",
+                        "1:some todos\n",
+                        "2:todo2\n",
+                       );
+    is($got, $expected);
+}
+
+done_testing();
+```
+
+## 解説
+
+新しいことがないので，解説するところがありません．
+
+## 練習問題
+
+1. データファイルを作成する `make_datafile()` 関数(引数: 文字列 $content，戻り値: なし) を作って，`05_list_todo.t` を書き換えましょう．
+2. `06_done_todo.t`, `07_list_notyet_todo.t` を作りましょう．
+3. それぞれのテストプログラムで共通化できる部分があったら，`MyTestUtil` モジュールに移動してみましょう．
 (ヒント: プログラムにデータを入力する関数，データファイルを初期化する関数，辺りが候補になるでしょう)
+4. (難しい) テストプログラムは `MyTestUtil` モジュールを作って同じ機能を複数の実行可能プログラムから呼び出すようにすることができました．
+TODO リストプログラムの機能すべてを，`MyTodolist` モジュールの中に入れて，そこから呼び出すだけにすることはできるでしょうか？
+(ヒント: 例えば，1つのプログラムファイルの主要部分を全部関数として `MyTodolist` モジュールに入れてしまいましょう．`init_todo.pl` だったら，`MyTodolist::init_todo` 関数を作ります．元のプログラムはその関数を呼び出すだけにするのです．それでテストプログラムを流してみて，全部テストが通るようなら同じ動きをするようになっています．)
 
 ---
 
 # 機能追加
+
+TODO リストの各プログラムをテストすることができるようになりました．
+
+* 03\_init\_todo.t
+* 04\_add\_todo.t
+* 05\_list\_todo.t
+* 06\_done\_todo.t
+* 07\_list\_notyet\_todo.t
+
+これで，プログラム側の中身を変えても動いているかどうかの確認ができます．
+プログラムのテストを行う準備ができたと言えます．
+
+* 03\_init\_todo.pl
+* 04\_add\_todo.pl
+* 05\_list\_todo.pl
+* 06\_done\_todo.pl
+* 07\_list\_notyet\_todo.pl
+
+それでは，プログラムに機能の追加してみましょう．
+
+## TODO リストを絞り込む
+
+`05_list_todo.pl` に機能を追加してみましょう．
+
+文字列を与えて，それと部分マッチするものだけ表示するようにしましょう．
+
+### 05_list_todo.pl - マッチ機能追加
+
+```{.perl .numberLines}
+
+```
+
+### 05_list_todo.t - マッチ機能追加
+
+```{.perl .numberLines}
+
+```
+
+## 解説
+
+### m// マッチ
+
+`m//` は，`=~` 演算子とひとまとめで覚えてください．
+`$str =~ m/正規表現/` のように使います．
+正規表現と書いた部分は，かなり特殊なので別の項で説明します．
+
+`$str =~ m/正規表現/` は，文字列，正規表現 を引数として，
+ブーリアンを返す演算子と見ることができます．
+
+```{.perl .numberLines}
+my @strs = ("first", "second", "third", "fourth", "fifth", "sixth", "seventh");
+
+foreach my $str (@strs) {
+    if ($str =~ m/th/) {
+        print($str, "\n");
+    }
+}
+# =>
+# third
+# fourth
+# fifth
+# sixth
+# seventh
+```
+
+この例では，`th` が正規表現です．
+
+演算子の前の文字列が正規表現とマッチした場合，
+この場合は，`th` を含んでいれば，
+真を返します．
+
+### 正規表現
+
+
+## 練習問題
 
 ---
 
