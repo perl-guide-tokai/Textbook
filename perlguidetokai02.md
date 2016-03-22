@@ -1275,13 +1275,16 @@ done_testing();
 
 ## 練習問題
 
-1. データファイルを作成する `make_datafile()` 関数(引数: 文字列 $content，戻り値: なし) を作って，`05_list_todo.t` を書き換えましょう．
+1. データファイルを作成する `make_datafile()` 関数(引数: 文字列 $content，戻り値: なし) を`MyTestUtil` モジュールの中に作って，`05_list_todo.t` を書き換えましょう．
 2. `06_done_todo.t`, `07_list_notyet_todo.t` を作りましょう．
 3. それぞれのテストプログラムで共通化できる部分があったら，`MyTestUtil` モジュールに移動してみましょう．
-(ヒント: プログラムにデータを入力する関数，データファイルを初期化する関数，辺りが候補になるでしょう)
+
+    (ヒント: プログラムにデータを入力する関数，辺りが候補になるでしょう)
 4. (難しい) テストプログラムは `MyTestUtil` モジュールを作って同じ機能を複数の実行可能プログラムから呼び出すようにすることができました．
-TODO リストプログラムの機能すべてを，`MyTodolist` モジュールの中に入れて，そこから呼び出すだけにすることはできるでしょうか？
-(ヒント: 例えば，1つのプログラムファイルの主要部分を全部関数として `MyTodolist` モジュールに入れてしまいましょう．`init_todo.pl` だったら，`MyTodolist::init_todo` 関数を作ります．元のプログラムはその関数を呼び出すだけにするのです．それでテストプログラムを流してみて，全部テストが通るようなら同じ動きをするようになっています．)
+
+    TODO リストプログラムの機能すべてを，`MyTodolist` モジュールの中に入れて，そこから呼び出すだけにしてみましょう．
+
+    (ヒント: 例えば，1つのプログラムファイルの主要部分を全部関数として `MyTodolist` モジュールに入れてしまいましょう．`init_todo.pl` だったら，`MyTodolist::init_todo` 関数を作ります．元のプログラムはその関数を呼び出すだけにするのです．それでテストプログラムを流してみて，全部テストが通るようなら同じ動きをするようになっています．)
 
 ---
 
@@ -1587,16 +1590,19 @@ $str =~ m/aaa|bbb/;
 
 1. 名前をコマンドラインから受け取って，`"Hello " + 名前` を出力するよう
 なプログラムを書きましょう．
-コマンドライン引数を指定しなければ，`"john"` が与えられたようにしてくだ
-さい．
+
+    コマンドライン引数を指定しなければ，`"john"` が与えられたようにしてください．
 2. コマンドラインで数値を2つ与えて，2つの数値の間の整数を合計するプロ
 グラムを書いてください．
-引数の数値が足りなければ，エラーメッセージを表示して終了するようにしてくださ
+
+    引数の数値が足りなければ，エラーメッセージを表示して終了するようにしてくださ
 い．
-(`1 10` が与えられたら `55` を表示しましょう．)
+
+    (`1 10` が与えられたら `55` を表示しましょう．)
 3. 先程のプログラムで，数値に見えるもの以外が入力されたらエラーを出す
 ようにしてください．
-(ヒント: 数値は数字 `[0-9]` と `.` (ドット)，`-`(マイナス)などで表現できます．)
+
+    (ヒント: 数値は数字 `[0-9]` と `.` (ドット)，`-`(マイナス)などで表現できます．)
 4. 書いたプログラムをテストしてみましょう．期待通り動いたでしょうか？
 
 ---
@@ -2020,24 +2026,412 @@ sub area_of_circle {
 
 ### 3
 
+`Test::More` は，`MyTestUtil` モジュールとテストプログラムの両方に必要なことに気をつけてください．
+
+`03_init_todo.t`
+
 ```{.perl .numberLines}
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+use Test::More; # is() / done_testing() 関数を使うために必要
+
+use MyTestUtil ("fullpath", "chtempdir", "is_todolist_content");
+
+# 実行するファイル名を指定する
+my $program_filename = "03_init_todo.pl";
+my $program_fullpath = fullpath($program_filename);
+
+# todolist.txt を出力するための一時ディレクトリを作成し，実行し，結果を比較する
+# (この一時ディレクトリは自動的に削除される)
+{
+    # 一時ディレクトリの作成
+    chtempdir();
+
+    # プログラムの実行
+    `$program_fullpath`; # プログラムの実行
+
+    # 実行結果の取り出し
+    # 実際の値(got)と期待する結果(expected) を比較
+    my $expected = "sample todo\n"; # 期待する結果
+    is_todolist_content($expected);
+}
+
+done_testing(); # テストの終了を宣言
+```
+
+`04_add_todo.t`
+
+```{.perl .numberLines}
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+use Test::More;
+
+use MyTestUtil ("fullpath", "chtempdir", "is_todolist_content");
+
+my $program_filename = "04_add_todo.pl";
+my $program_fullpath = fullpath($program_filename);
+
+{
+    chtempdir();
+
+    my $new_todo_content = "append new todo";
+    open(my $wfh, "|-", $program_fullpath) or die;
+    print($wfh $new_todo_content, "\n");
+    close($wfh) or die;
+
+    my $expected = $new_todo_content . "\n";
+    is_todolist_content($expected);
+}
+
+done_testing();
+```
+
+`MyTestUtil.pm`
+
+```{.perl .numberLines}
+package MyTestUtil;
+
+use strict;
+use warnings;
+
+use Cwd;
+use File::Temp ("tempdir");
+use Test::More;
+
+use Exporter ("import");
+our @EXPORT_OK = ("fullpath", "chtempdir", "is_todolist_content");
+
+sub fullpath {
+    my ($program_filename) = @_;
+    my $pwd = cwd();
+    return join("/", $pwd, $program_filename);
+}
+
+sub chtempdir {
+    my $temporary_directory = tempdir(CLEANUP => 1);
+    chdir($temporary_directory) or die; # 現在のディレクトリを一時ディレクトリにする
+}
+
+sub is_todolist_content {
+    my ($expected, $message) = @_;
+
+    open(my $fh, "<", "todolist.txt") or die;
+    my $got = join("", <$fh>);
+    close($fh) or die;
+
+    is($got, $expected, $message);
+}
+
+1;
 ```
 
 ## 6 練習問題
 
 ### 1
 
+`05_list_todo.t`
+
 ```{.perl .numberLines}
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+use Test::More;
+
+use MyTestUtil ("fullpath", "chtempdir", "make_datafile");
+
+my $program_filename = "05_list_todo.pl";
+my $program_fullpath = fullpath($program_filename);
+
+{
+    # 準備
+    chtempdir();
+
+    make_datafile(join("",
+            "some todos", "\n",
+            "todo2", "\n",
+        ));
+
+    # 実行
+    my $got = `$program_fullpath`;
+
+    # 結果比較
+    my $expected = join("",
+                        "1:some todos\n",
+                        "2:todo2\n",
+                       );
+    is($got, $expected);
+}
+
+done_testing();
+```
+
+`MyTestUtil.pm`
+
+```{.perl .numberLines}
+package MyTestUtil;
+
+use strict;
+use warnings;
+
+use Cwd;
+use File::Temp ("tempdir");
+use Test::More;
+
+use Exporter ("import");
+our @EXPORT_OK = ("fullpath", "chtempdir", "is_todolist_content", "make_datafile");
+
+sub fullpath {
+    my ($program_filename) = @_;
+    my $pwd = cwd();
+    return join("/", $pwd, $program_filename);
+}
+
+sub chtempdir {
+    my $temporary_directory = tempdir(CLEANUP => 1);
+    chdir($temporary_directory) or die; # 現在のディレクトリを一時ディレクトリにする
+}
+
+sub is_todolist_content {
+    my ($expected, $message) = @_;
+
+    open(my $fh, "<", "todolist.txt") or die;
+    my $got = join("", <$fh>);
+    close($fh) or die;
+
+    is($got, $expected, $message);
+}
+
+sub make_datafile {
+    my ($content) = @_;
+
+    open(my $wfh, ">", "todolist.txt") or die;
+    print($wfh $content);
+    close($wfh) or die;
+}
+
+1;
 ```
 
 ### 2
 
+`06_done_todo.t`
+
 ```{.perl .numberLines}
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+use Test::More;
+
+use MyTestUtil ("fullpath", "chtempdir", "is_todolist_content", "make_datafile");
+
+my $program_filename = "06_done_todo.pl";
+my $program_fullpath = fullpath($program_filename);
+
+{
+    # 準備
+    chtempdir();
+
+    make_datafile(join("",
+            "some todos\n",
+            "some todos 2nd\n",
+        ));
+
+    # 実行
+    my $target = 1;
+    open(my $pfh, "|-", $program_fullpath) or die;
+    print($pfh $target, "\n");
+    close($pfh) or die;
+    print("\n");
+
+    # 結果比較
+    my $expected = join("",
+                        "Done,some todos\n",
+                        "some todos 2nd\n",
+                       );
+    is_todolist_content($expected);
+}
+
+done_testing();
+```
+
+`07_list_notyet_todo.t`
+
+```{.perl .numberLines}
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+use Test::More;
+
+use MyTestUtil ("fullpath", "chtempdir", "is_todolist_content", "make_datafile");
+
+my $program_filename = "07_list_notyet_todo.pl";
+my $program_fullpath = fullpath($program_filename);
+
+{
+    # 準備
+    chtempdir();
+
+    make_datafile(join("",
+            "Done,some todos\n",
+            "some todos 2nd\n",
+        ));
+
+    # 実行
+    my $got = `$program_fullpath`;
+
+    # 結果比較
+    my $expected = join("",
+                        "2:some todos 2nd\n",
+                       );
+    is($got, $expected);
+}
+
+done_testing();
 ```
 
 ### 3
 
+テストするプログラムを実行して入力する部分を関数にしました．
+
+`04_add_todo.t`
+
 ```{.perl .numberLines}
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+use Test::More;
+
+use MyTestUtil ("fullpath", "chtempdir", "is_todolist_content", "execute_with_input");
+
+my $program_filename = "04_add_todo.pl";
+my $program_fullpath = fullpath($program_filename);
+
+{
+    chtempdir();
+
+    my $new_todo_content = "append new todo\n";
+    execute_with_input($program_fullpath, $new_todo_content);
+
+    my $expected = $new_todo_content;
+    is_todolist_content($expected);
+}
+
+done_testing();
+```
+
+`06_done_todo.t`
+
+```{.perl .numberLines}
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+use Test::More;
+
+use MyTestUtil ("fullpath", "chtempdir", "is_todolist_content", "make_datafile", "execute_with_input");
+
+my $program_filename = "06_done_todo.pl";
+my $program_fullpath = fullpath($program_filename);
+
+{
+    # 準備
+    chtempdir();
+
+    make_datafile(join("",
+            "some todos\n",
+            "some todos 2nd\n",
+        ));
+
+    # 実行
+    my $target = "1\n";
+    execute_with_input($program_fullpath, $target);
+    print("\n");
+
+    # 結果比較
+    my $expected = join("",
+                        "Done,some todos\n",
+                        "some todos 2nd\n",
+                       );
+    is_todolist_content($expected);
+}
+
+done_testing();
+```
+
+`MyTestUtil.pm`
+
+```{.perl .numberLines}
+package MyTestUtil;
+
+use strict;
+use warnings;
+
+use Cwd;
+use File::Temp ("tempdir");
+use Test::More;
+
+use Exporter ("import");
+our @EXPORT_OK = (
+    "fullpath",
+    "chtempdir",
+    "is_todolist_content",
+    "make_datafile",
+    "execute_with_input",
+);
+
+sub fullpath {
+    my ($program_filename) = @_;
+    my $pwd = cwd();
+    return join("/", $pwd, $program_filename);
+}
+
+sub chtempdir {
+    my $temporary_directory = tempdir(CLEANUP => 1);
+    chdir($temporary_directory) or die; # 現在のディレクトリを一時ディレクトリにする
+}
+
+sub is_todolist_content {
+    my ($expected, $message) = @_;
+
+    open(my $fh, "<", "todolist.txt") or die;
+    my $got = join("", <$fh>);
+    close($fh) or die;
+
+    is($got, $expected, $message);
+}
+
+sub make_datafile {
+    my ($content) = @_;
+
+    open(my $wfh, ">", "todolist.txt") or die;
+    print($wfh $content);
+    close($wfh) or die;
+}
+
+sub execute_with_input {
+    my ($program_fullpath, $input) = @_;
+
+    open(my $wfh, "|-", $program_fullpath) or die;
+    print($wfh $input);
+    close($wfh) or die;
+}
+
+1;
 ```
 
 ### 4
