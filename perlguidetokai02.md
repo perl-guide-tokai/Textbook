@@ -296,7 +296,7 @@ not ok 1 - test for stdout
 2. いくつかの演算子の機能を試してみてください
    (`+`, `-`, `*`, `/`, `.`, `x`, `==`, `eq`, `not`, `and`, `or`, ...)
 3. くりかえしの機能を試してみてください
-   (`while`, `foreach` の中で `is` を使ってみてください．ブロックの中
+   (`while`, `foreach` の中や外で `is` を使ってみてください．ブロックの中
    で計算した結果を確認するのもよいでしょう)
 
 ---
@@ -440,7 +440,7 @@ done_testing(); # テストの終了を宣言
 
 例えば，
 
-10_directory_test.pl
+`10_directory_test.pl`
 
 
 ```{.perl .numberLines}
@@ -537,8 +537,14 @@ print($localvar);
 ## 練習問題
 
 1. `File::Temp::tempdir()` という形式で 10\_directory\_test.pl を書き直してみましょう．同じ動作になりましたか？
-2. 10_directory_test.pl を描き直して，`is()` 関数を使って，
-`chdir()`の動作を確認するようにしてみましょう．
+2. `10_directory_test.pl` を描き直して，`10_directory_test.t` を作りましょう．
+'`is()` 関数を使って，`chdir()`の動作を確認しましょう．
+(ヒント MacOSX の場合，`chdir()` 関数で指定したディレクトリ名と `cwd()` 関数から得られたディレクトリ名が異なっており，先頭に `"/private"` が付いていることがあります．比較側に`"/private"` を付けておくとよいでしょう．)
+
+```{.perl .numberLines}
+my $expected = "/private" . $temp_dirname;
+```
+
 3. ブロックを使って，変数の有効範囲を確かめてみましょう．
 テストするサンプルを書きます．
 
@@ -862,7 +868,7 @@ use warnings;
 
 use Cwd;
 
-our @ISA = ("Exporter");
+use Exporter ("import");
 our @EXPORT_OK = ("fullpath");
 
 sub fullpath {
@@ -1064,7 +1070,6 @@ sub chtempdir {
 
 {
     chtempdir();
-    :
 ```
 
 これを `MyTestUtil` モジュールに移動します．
@@ -1077,7 +1082,6 @@ use MyTestUtil ("fullpath", "chtempdir"); # 関数を追加
 ```{.perl .numberLines}
 {
     chtempdir();
-    :
 ```
 
 `MyTestUtil.pm` には，関数の移動の他に
@@ -1094,8 +1098,8 @@ our @EXPORT_OK = ("fullpath", "chtempdir");
 (中略)
 
 sub chtempdir {
-    my $temporary_directory = tempdir(CLEANUP => 1);
-    chdir($temporary_directory) or die;
+    my $tmp_dirname = tempdir(CLEANUP => 1);
+    chdir($tmp_dirname) or die;
 }
 ```
 
@@ -1199,9 +1203,9 @@ sub fullpath {
 }
 
 sub chtempdir {
-    my $temporary_directory = tempdir(CLEANUP => 1);
-    chdir($temporary_directory) or die; # 現在のディレクトリを一時ディレクトリにする
-    return $temporary_directory;
+    my $tmp_dirname = tempdir(CLEANUP => 1);
+    chdir($tmp_dirname) or die; # 現在のディレクトリを一時ディレクトリにする
+    return $tmp_dirname;
 }
 
 1;
@@ -1210,10 +1214,16 @@ sub chtempdir {
 ## 練習問題
 
 1. 円周を計算する関数 `circumference_of_circle()` (引数: 半径，戻り値: 円周) を書いてみましょう．
-半径を入力して，円周を出力するプログラムを書いてみましょう．
+
+    半径を入力して，円周を出力するプログラムを書いてみましょう．
+
+    (ヒント 円の円周は，$2\pi r$ です．$\pi$ は `3.14` として計算すると良いでしょう)
 2. モジュール `Math` を作り，その中に円周を作る関数，円の面積を作る関数 `area_of_circle()` (引数: 半径，戻り値: 面積) を書いてみましょう．
-半径を入力して，円周と面積を出力するプログラムから`Math` モジュールを使ってみましょう．
-3. `is_todolist_content()` という関数(引数: $expected, $message，戻り値: なし)を `MyTestUtil` モジュール内に作り，それぞれのテストで使うようにしなさい．
+
+    `Math` モジュールを使って，半径を入力して円周と面積を出力するプログラムを作ってみましょう．
+
+    (ヒント 円の面積は，$\pi r^2$ です)
+3. `is_todolist_content()` という関数(引数: $expected, $message，戻り値: なし)を `MyTestUtil` モジュール内に作り，それぞれのテストで使うようにしてみましょう．
 
 # 共通部分を使ってプログラムを書いてみる
 
@@ -1775,6 +1785,287 @@ our @EXPORT_OK = ("func1");
 ---
 
 # 練習問題の答
+
+## 3 練習問題
+
+### 1
+
+`ex3_1.t`
+
+```{.perl .numberLines}
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+use Test::More;
+
+is(`ls`, join("",
+        "01_hello.pl\n",
+        "01_hello.t\n",
+        "01_hello_ng.t\n",
+        "02_calc.pl\n",
+        "03_init_todo.pl\n",
+        "03_init_todo.t\n",
+        "04_add_todo.pl\n",
+        "04_add_todo.t\n",
+        "05_list_todo.pl\n",
+        "05_list_todo.t\n",
+        "06_done_todo.pl\n",
+        "06_done_todo.t\n",
+        "07_list_notyet_todo.pl\n",
+        "07_list_notyet_todo.t\n",
+        "MyTestUtil.pm\n",
+        "ex3_1.t\n",
+        "todolist.txt\n",
+    ));
+
+done_testing();
+```
+
+コマンド出力は大抵最後に改行が入っています．
+そのことに注意してください．
+
+### 2
+
+演算子の動作を自分で確認することができます．
+
+```{.perl .numberLines}
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+use Test::More;
+
+is(1 + 1, 2, "1 + 1 #=> 2");
+is(5 - 2, 3, "5 - 2 #=> 3");
+is(5 * 2, 10, "5 * 2 #=> 10");
+is(5 / 2, 2.5, "5 / 2 #=> 2.5");
+is("a" . "b", "ab", "a . b #=> ab");
+is("df" x 3, "dfdfdf", "df x 3 #=> dfdfdf");
+is(100 == 101, "", "100 == 101 #=> F");
+is(100 == 100, 1, "100 == 100 #=> T");
+is("a" eq "b", "", "a eq b #=> F");
+is("a" eq "a", 1, "a eq a #=> T");
+is(not(1 == 1), "", "not(1 == 1) #=> F");
+is(not(1 != 1), 1, "not(1 != 1) #=> T");
+is(1 == 1 and 1 != 1, "", "1 == 1 and 1 != 1 #=> F");
+is(1 == 1 and 1 == 1, 1, "1 == 1 and 1 == 1 #=> T");
+is(1 != 1 or 1 != 1, "", "1 != 1 or 1 != 1 #=> F");
+is(1 != 1 or 1 == 1, 1, "1 != 1 or 1 == 1 #=> T");
+
+done_testing();
+```
+
+1点良くないコードが含まれています．
+偽を `""`，真を `1` と決め付けて確認している点です．
+
+このような真偽値を確認するテストには，`ok()` という関数が個別に用意されています．
+こちらを使った方が良いでしょう．
+
+又，真偽値をテストするのなら，真，偽の両方になるパターンでテストした方が良いでしょう．
+
+### 3
+
+繰り返しブロックの中で `is` を使うのは難しいですね．
+
+```{.perl .numberLines}
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+use Test::More;
+use File::Temp ("tempdir");
+
+my @data = ("aaa", "bbb", "ccc");
+
+{ # setup
+    my $temp_dirname = tempdir(CLEANUP => 1);
+    chdir($temp_dirname) or die;
+
+    open(my $wfh, ">", "datafile") or die;
+    foreach my $datum (@data) {
+        print($wfh $datum, "\n");
+    }
+    close($wfh) or die;
+}
+
+{ # test for readline
+    open(my $rfh, "<", "datafile") or die;
+    my $buf = "";
+    foreach my $expected (@data) {
+        my $got = <$rfh>;
+        is($got, $expected. "\n");
+        chomp($got);
+        $buf = $buf . $got;
+    }
+    close($rfh) or die;
+
+    is($buf, join("", @data));
+}
+
+done_testing();
+```
+
+## 4 練習問題
+
+### 1
+
+`use File::Temp ("temp")` の引数部分を削除すると良いでしょう．
+
+```{.perl .numberLines}
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+use File::Temp;
+use Cwd;
+
+print("current directory: ", cwd(), "\n");
+
+my $temp_dir = File::Temp::tempdir(CLEANUP => 1);
+chdir($temp_dir) or die;
+
+print("new     directory: ", cwd(), "\n");
+```
+
+### 2
+
+```{.perl .numberLines}
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+use File::Temp;
+use Cwd;
+use Test::More;
+
+my $temp_dir = File::Temp::tempdir(CLEANUP => 1);
+chdir($temp_dir) or die;
+
+is(cwd(), $temp_dir);
+#is(cwd(), "/private" . $temp_dir); # Mac の場合
+
+done_testing();
+```
+
+### 3
+
+サンプルの通りです．
+
+## 5 練習問題
+
+### 1
+
+入力方法を覚えていましたでしょうか？
+
+関数は使う前に宣言する必要があります．
+
+```{.perl .numberLines}
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+sub circumference_of_circle {
+    my ($r) = @_;
+    return 2 * $r * 3.14;
+}
+
+my $r = <STDIN>;
+print(circumference_of_circle($r), "\n");
+```
+
+### 2
+
+```{.perl .numberLines}
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+use Math ("circumference_of_circle", "area_of_circle");
+
+my $r = <STDIN>;
+
+print(circumference_of_circle($r), "\n");
+print(area_of_circle($r), "\n");
+```
+
+```{.perl .numberLines}
+package Math;
+
+use strict;
+use warnings;
+
+use Exporter ("import");
+our @EXPORT_OK = ("circumference_of_circle", "area_of_circle");
+
+sub circumference_of_circle {
+    my ($r) = @_;
+    return 2 * 3.14 * $r;
+}
+
+sub area_of_circle {
+    my ($r) = @_;
+    return 3.14 * $r * $r;
+}
+
+1;
+```
+
+### 3
+
+```{.perl .numberLines}
+```
+
+## 6 練習問題
+
+### 1
+
+```{.perl .numberLines}
+```
+
+### 2
+
+```{.perl .numberLines}
+```
+
+### 3
+
+```{.perl .numberLines}
+```
+
+### 4
+
+```{.perl .numberLines}
+```
+
+## 7 練習問題
+
+### 1
+
+```{.perl .numberLines}
+```
+
+### 2
+
+```{.perl .numberLines}
+```
+
+### 3
+
+```{.perl .numberLines}
+```
+
+### 4
+
+```{.perl .numberLines}
+```
 
 ---
 
