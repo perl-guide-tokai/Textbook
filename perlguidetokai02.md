@@ -539,7 +539,8 @@ print($localvar);
 1. `File::Temp::tempdir()` という形式で 10\_directory\_test.pl を書き直してみましょう．同じ動作になりましたか？
 2. `10_directory_test.pl` を描き直して，`10_directory_test.t` を作りましょう．
 '`is()` 関数を使って，`chdir()`の動作を確認しましょう．
-(ヒント MacOSX の場合，`chdir()` 関数で指定したディレクトリ名と `cwd()` 関数から得られたディレクトリ名が異なっており，先頭に `"/private"` が付いていることがあります．比較側に`"/private"` を付けておくとよいでしょう．)
+
+    (ヒント: MacOSX の場合，`chdir()` 関数で指定したディレクトリ名と `cwd()` 関数から得られたディレクトリ名が異なっており，先頭に `"/private"` が付いていることがあります．比較側に`"/private"` を付けておくとよいでしょう．)
 
 ```{.perl .numberLines}
 my $expected = "/private" . $temp_dirname;
@@ -1217,12 +1218,12 @@ sub chtempdir {
 
     半径を入力して，円周を出力するプログラムを書いてみましょう．
 
-    (ヒント 円の円周は，$2\pi r$ です．$\pi$ は `3.14` として計算すると良いでしょう)
+    (ヒント: 円の円周は，$2\pi r$ です．$\pi$ は `3.14` として計算すると良いでしょう)
 2. モジュール `Math` を作り，その中に円周を作る関数，円の面積を作る関数 `area_of_circle()` (引数: 半径，戻り値: 面積) を書いてみましょう．
 
     `Math` モジュールを使って，半径を入力して円周と面積を出力するプログラムを作ってみましょう．
 
-    (ヒント 円の面積は，$\pi r^2$ です)
+    (ヒント: 円の面積は，$\pi r^2$ です)
 3. `is_todolist_content()` という関数(引数: $expected, $message，戻り値: なし)を `MyTestUtil` モジュール内に作り，それぞれのテストで使うようにしてみましょう．
 
 # 共通部分を使ってプログラムを書いてみる
@@ -1275,7 +1276,7 @@ done_testing();
 
 ## 練習問題
 
-1. データファイルを作成する `make_datafile()` 関数(引数: 文字列 $content，戻り値: なし) を`MyTestUtil` モジュールの中に作って，`05_list_todo.t` を書き換えましょう．
+1. データファイルを作成する `make_datafile()` 関数(引数: 文字列 `$content`，戻り値: なし) を`MyTestUtil` モジュールの中に作って，`05_list_todo.t` を書き換えましょう．
 2. `06_done_todo.t`, `07_list_notyet_todo.t` を作りましょう．
 3. それぞれのテストプログラムで共通化できる部分があったら，`MyTestUtil` モジュールに移動してみましょう．
 
@@ -1285,6 +1286,13 @@ done_testing();
     TODO リストプログラムの機能すべてを，`MyTodolist` モジュールの中に入れて，そこから呼び出すだけにしてみましょう．
 
     (ヒント: 例えば，1つのプログラムファイルの主要部分を全部関数として `MyTodolist` モジュールに入れてしまいましょう．`init_todo.pl` だったら，`MyTodolist::init_todo` 関数を作ります．元のプログラムはその関数を呼び出すだけにするのです．それでテストプログラムを流してみて，全部テストが通るようなら同じ動きをするようになっています．)
+
+    (ヒント: テストしようとすると，各コマンドから `MyTodolist` モジュールが見付からないというエラーが出ると思います．`use MyTodolist` より前に以下を入れてみてください．)
+
+```{.perl .numberLines}
+use FindBin;
+use lib ($FindBin::Bin);
+```
 
 ---
 
@@ -1349,7 +1357,7 @@ use warnings;
 
 use Test::More;
 
-use MyTestUtil3 ("fullpath", "chtempdir");
+use MyTestUtil ("fullpath", "chtempdir");
 
 my $program_filename = "05_list_todo.pl";
 my $program_fullpath = fullpath($program_filename);
@@ -1522,7 +1530,7 @@ foreach my $str (@strs) {
 
 例えば，`aaa|bbb` という正規表現は，文字列 `"aaa"` と `"bbb"` を意図しています．
 
-Perl の正規表現の場合，`=~ m//` の形式で比較すると，
+Perl の正規表現の場合，`$str =~ m//` の形式で比較すると，
 通常は，文字列が，その正規表現(の意図する文字列)を含んでいると
 真を返します．
 
@@ -1576,7 +1584,8 @@ $str =~ m/aaa|bbb/;
 :    回数指定．直前の表現の 1 回又はそれ以上の繰り返しを意図します．
 
      `a+b` だったら，`"ab"` や `"aaaab"` を意図しています．
-     `"b"` を含みません．
+
+     `"b"` は，先頭の `"a"` の部分を 0回の繰り返しているので，意図したものではありません．
 
 `()` (括弧)
 
@@ -1599,15 +1608,19 @@ $str =~ m/aaa|bbb/;
 い．
 
     (`1 10` が与えられたら `55` を表示しましょう．)
-3. `Ex7` というモジュールを作って，2つの数値の間の整数を合計する`sum()` 関数(入力: $b, $e，戻り値: 数値)を作って下さい．
+
+    (ヒント: 小数を整数に変換するには `POSIX` モジュールの `floor()` 関数を使います．`floor(1.5) #=> 1` )
+
+    (ヒント: プログラムを即座に終了するには `exit()` 関数を使います．関数の `return` に似ています．)
+3. `Ex7` というモジュールを作って，2つの数値の間の整数を合計する`sum()` 関数(引数: $b, $e，戻り値: 数値)を作って下さい．
 
     それを使うようにプログラムを書き換えてください．
 
 4. 先程のプログラムで，数値に見えるもの以外が入力されたらメッセージを出して終了するようにしてください．
 
-    (ヒント 数値は数字 `[0-9]` と `.` (ドット)，`-`(マイナス)などで表現できます．)
+    (ヒント: 数値は数字 `[0-9]` と `.` (ドット)，`-`(マイナス)などで表現できます．)
 
-    (ヒント 1つの入力をチェックする `valid_input()` 関数(入力: 文字列，出力: ブーリアン) を作っておくのもよいでしょう)
+    (ヒント: 1つの入力をチェックする `is_number()` 関数(入力: 文字列，出力: ブーリアン) を作っておくのもよいでしょう)
 5. 書いたプログラムをテストするプログラムを書いてみましょう．期待通り動いたでしょうか？
 6. `Ex7` モジュールをテストするプログラムを書いてみてください．
 
@@ -2442,19 +2455,211 @@ sub execute_with_input {
 
 ### 4
 
+今回短いので，エクスポート(EXPORT) するのを省略しました．
+
+`03_init_todo.pl`
+
 ```{.perl .numberLines}
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+use FindBin;
+use lib ($FindBin::Bin);
+use MyTodolist;
+
+my $todo = "sample todo";
+MyTodolist::init_todo($todo);
+```
+
+`04_add_todo.pl`
+
+```{.perl .numberLines}
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+use FindBin;
+use lib ($FindBin::Bin);
+
+use MyTodolist;
+
+MyTodolist::add_todo();
+```
+
+`05_list_todo.pl`
+
+```{.perl .numberLines}
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+use FindBin;
+use lib ($FindBin::Bin);
+
+use MyTodolist;
+
+MyTodolist::list_todo();
+```
+
+`06_done_todo.pl`
+
+```{.perl .numberLines}
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+use FindBin;
+use lib ($FindBin::Bin);
+
+use MyTodolist;
+
+MyTodolist::done_todo();
+```
+
+`07_list_notyet_todo.pl`
+
+```{.perl .numberLines}
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+use FindBin;
+use lib ($FindBin::Bin);
+
+use MyTodolist;
+
+MyTodolist::list_notyet_todo();
+```
+
+`MyTodolist.pm`
+
+```{.perl .numberLines}
+package MyTodolist;
+
+use strict;
+use warnings;
+
+use Exporter ("import");
+our @EXPORT_OK = ();
+
+sub init_todo {
+    my ($todo) = @_;
+    open(my $fh, ">", "todolist.txt") or die;
+    print($fh $todo, "\n");
+    close($fh) or die;
+}
+
+sub add_todo {
+    print("Input todo: ");
+    my $content = <STDIN>;
+    chomp($content);
+    print($content, "\n");
+
+    open(my $fh, ">>", "todolist.txt") or die;
+    print($fh $content . "\n");
+    close($fh) or die;
+}
+
+sub list_todo {
+    open(my $fh, "<", "todolist.txt") or die;
+    my $count = 1;
+    while (defined(my $line = <$fh>)) {
+        print($count, ":", $line);
+        $count = $count + 1;
+    }
+    close($fh) or die;
+}
+
+sub done_todo {
+    print("which number?: ");
+    my $num = <STDIN>;
+
+    open(my $rfh, "<", "todolist.txt") or die;
+    my @lines;
+    while (defined(my $line = <$rfh>)) {
+        push(@lines, $line);
+    }
+    close($rfh) or die;
+
+    open(my $wfh, ">", "todolist.txt") or die;
+    my $count = 1;
+    foreach my $line (@lines) {
+        if ($num == $count) {
+            $line = "Done," . $line;
+        }
+        print($wfh $line);
+        $count = $count + 1;
+    }
+    close($wfh) or die;
+}
+
+sub list_notyet_todo {
+    open(my $fh, "<", "todolist.txt") or die;
+    my $count = 1;
+    while (defined(my $line = <$fh>)) {
+        chomp($line);
+        my ($state, $content) = split(/,/, $line);
+        if ($state ne "Done") {
+            print($count, ":", $line, "\n");
+        }
+        $count = $count + 1;
+    }
+    close($fh) or die;
+}
+
+1;
 ```
 
 ## 7 練習問題
 
 ### 1
 
+`@ARGV` は，通常のリスト変数と同じように扱えばよいでしょう．
+
 ```{.perl .numberLines}
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+my $name = "john";
+
+if (@ARGV > 0) {
+    ($name) = @ARGV;
+}
+
+print("Hello, ", $name, "\n");
 ```
 
 ### 2
 
 ```{.perl .numberLines}
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+use POSIX;
+
+if (@ARGV < 2) {
+    exit;
+}
+
+my ($b, $e) = @ARGV;
+
+my $sum = 0;
+my $i = floor($b);
+while ($i <= $e) {
+    $sum = $sum + $i;
+    $i = $i + 1;
+}
+print($sum, "\n");
 ```
 
 ### 3
