@@ -251,7 +251,7 @@ print("a" x 3, "\n"); # => aaa が表示される
         * 文字列連結: `.` (ドット)
     * 文字列，数値 → 文字列
         * 文字列の繰り返し: `x`
-  
+
 ### 関数呼び出し
 
 `print()` について少し解説します．
@@ -956,8 +956,10 @@ my ($line1, $line2) = <>;
   リストから数に対応する人名を表示するプログラムを書いてください．
   例えば，入力された番号が 1, 2, 4, 2 だとすると，fread, betty, dino,
   betty となります．
-  
+
     fred betty barney dino wilma pebbles bamm-bamm
+
+  (ヒント: 入力を終了するには，MacOSX，Linux では Control+D，Windows ではControl+Zを押してEnterを入力する必要があります．)
 
 ---
 
@@ -1105,7 +1107,7 @@ if ("a") {
     * `and`, `or`, `&&`, `||`
 * ブーリアン → ブーリアン
     * `not`, `!`
-    
+
 ## 関数
 
 関数は，`関数名 + "(" + 引数1 + ", " + 引数2 ... ")"` の形式で呼び出す．
@@ -1131,7 +1133,7 @@ if ("a") {
 `push()`
 
 :   リスト変数の末尾に値を追加する．
-    
+
 `split()`
 
 :   文字列を区切りで区切って，リスト値にして返す．
@@ -1231,6 +1233,8 @@ print("tetsu\n17\n");
 
 `print` は，`print()` 関数のことで，何も指定しないとデフォルトで，`$_` 変数の内容を出力することになっています．
 
+`ex3_4.pl`
+
 ```{.perl .numberLines}
 #!/usr/bin/env perl
 
@@ -1257,6 +1261,8 @@ foreach (@lines) {
 出てきた演算子は，`+`, `-`, `*`, `/`, `.`, `x` です．
 それぞれを使ってみて，演算子に慣れましょう．
 
+`ex4_1.pl`
+
 ```{.perl .numberLines}
 #!/usr/bin/env perl
 
@@ -1276,6 +1282,8 @@ print(1 + 2 * 3, "\n"); # => 7
 ### 2.
 
 変数を使うときに最初に，`my` を入れるのを忘れないでください．
+
+`ex4_2.pl`
 
 ```{.perl .numberLines}
 #!/usr/bin/env perl
@@ -1332,6 +1340,8 @@ close($fh) or die;
 
 半径を固定値ではなく，入力できるようにしたものです．
 
+`ex7_2.pl`
+
 ```{.perl .numberLines}
 #!/usr/bin/env perl
 
@@ -1356,6 +1366,8 @@ print("半径: ", $r, " の円周は ", 2 * $pi * $r, "\n");
 `Argument "a" isn't numeric in ...` のような警告が出てしまうでしょう．
 これらを回避する方法もありますが，一旦は無視します．
 
+`ex7_3.pl`
+
 ```{.perl .numberLines}
 #!/usr/bin/env perl
 
@@ -1377,6 +1389,8 @@ print($op1 x $op2, "\n");
 ```
 
 ### 4.
+
+`ex7_4.pl`
 
 ```{.perl .numberLines}
 #!/usr/bin/env perl
@@ -1407,6 +1421,8 @@ close($wfh) or die;
 
 まっすぐ書くとこのようになります．
 
+`ex8_1.pl`
+
 ```{.perl .numberLines}
 #!/usr/bin/env perl
 
@@ -1421,6 +1437,8 @@ close($fh) or die;
 ```
 
 ファイル名を指定できるようにすると，以下のようになります．
+
+`ex8_1_2.pl`
 
 ```{.perl .numberLines}
 #!/usr/bin/env perl
@@ -1440,6 +1458,8 @@ close($fh) or die;
 
 ### 2.
 
+`ex8_2.pl`
+
 ```{.perl .numberLines}
 #!/usr/bin/env perl
 
@@ -1454,6 +1474,8 @@ while ($i <= 10) {
 ```
 
 ### 3.
+
+`ex8_3.pl`
 
 ```{.perl .numberLines}
 #!/usr/bin/env perl
@@ -1471,6 +1493,8 @@ print($sum, "\n");
 ```
 
 ### 4.
+
+`ex8_4.pl`
 
 ```{.perl .numberLines}
 #!/usr/bin/env perl
@@ -1492,6 +1516,8 @@ print($sum, "\n");
 
 ### 5.
 
+`ex8_5.pl`
+
 ```{.perl .numberLines}
 #!/usr/bin/env perl
 
@@ -1509,6 +1535,8 @@ while ($n < 20) {
 
 素直に書くとこのようになるでしょう．
 
+`ex8_6.pl`
+
 ```{.perl .numberLines}
 #!/usr/bin/env perl
 
@@ -1519,6 +1547,7 @@ my $input = <STDIN>;
 chomp($input);
 while ($input ne "quit") {
     $input = <STDIN>;
+    chomp($input);
 }
 print("end...", "\n");
 ```
@@ -1526,6 +1555,8 @@ print("end...", "\n");
 <STDIN> というのを二回書きたくなかったら．
 スカラ変数が初期化時には，undef であることを利用して，
 以下のように書くこともできます．
+
+`ex8_6_2.pl`
 
 ```{.perl .numberLines}
 #!/usr/bin/env perl
@@ -1536,6 +1567,7 @@ use warnings;
 my $input;
 while (!defined($input) or $input ne "quit") {
     $input = <STDIN>;
+    chomp($input);
 }
 print("end...", "\n");
 ```
@@ -1543,6 +1575,8 @@ print("end...", "\n");
 ## 9. 練習問題
 
 ### 1.
+
+`ex9_1.pl`
 
 ```{.perl .numberLines}
 #!/usr/bin/env perl
@@ -1558,7 +1592,25 @@ while ($i < 5) {
 }
 ```
 
+`foreach` を使うこともできます．
+
+`ex9_1_2.pl`
+
+```{.perl .numberLines}
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+my @chars = ("alpha", "bravo", "charlie", "delta", "echo");
+foreach my $char (@chars) {
+    print($char, "\n");
+}
+```
+
 ### 2.
+
+`ex9_2.pl`
 
 ```{.perl .numberLines}
 #!/usr/bin/env perl
@@ -1582,6 +1634,8 @@ print(2 * $pi * $r, "\n");
 
 ### 4.
 
+`ex9_4.pl`
+
 ```{.perl .numberLines}
 #!/usr/bin/env perl
 
@@ -1600,6 +1654,8 @@ print($sum, "\n");
 ```
 
 ### 5.
+
+`ex9_5.pl`
 
 ```{.perl .numberLines}
 #!/usr/bin/env perl
@@ -1624,6 +1680,8 @@ print($sum, "\n");
 
 ### 1.
 
+`ex10_1.pl`
+
 ```{.perl .numberLines}
 #!/usr/bin/env perl
 
@@ -1633,7 +1691,7 @@ use warnings;
 # 入力
 my $ymd = <STDIN>;
 chomp($ymd);
-my ($y, $m, $d) = split(/,/, $in);
+my ($y, $m, $d) = split(/,/, $ymd);
 
 # 出力
 print($y, "年", $m, "月", $d, "日です", "\n");
@@ -1643,6 +1701,8 @@ print($y, "年", $m, "月", $d, "日です", "\n");
 
 数値を読み込んで，配列の添字に使うことがわかればできます．
 リストの添字は，`0`から始まるので，入力する数字と1つずれていることに注意が必要です．
+
+`ex10_2.pl`
 
 ```{.perl .numberLines}
 #!/usr/bin/env perl
@@ -1659,7 +1719,7 @@ while (defined(my $n = <STDIN>)) {
 }
 
 foreach my $index (@indices) {
-    print $names[$index]; # 添字とズレているので注意
+    print $names[$index], "\n"; # 添字とズレているので注意
 }
 ```
 
