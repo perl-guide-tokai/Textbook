@@ -1607,7 +1607,7 @@ $str =~ m/aaa|bbb/;
     引数の数値が足りなければ，エラーメッセージを表示して終了するようにしてくださ
 い．
 
-    (`1 10` が与えられたら `55` を表示しましょう．)
+    `./ex7_2.pl 1 10` のように実行されたら `55` を表示しましょう．
 
     (ヒント: 小数を整数に変換するには `POSIX` モジュールの `floor()` 関数を使います．`floor(1.5) #=> 1` )
 
@@ -1783,7 +1783,15 @@ our @EXPORT_OK = ("func1");
 
 :    1文字の選択肢を表現します．
 
+     文字クラスの表現の中では，
+     1文字ずつ指定するので，`.`(ドット) も`.` そのものを表しますが，
+     一部の文字だけが特殊な意味以外の意味を持ちます．
+
      `-` (ハイフン) を使って範囲も指定できます．(ex. `[0-9]`)
+     `-` 文字自体を表すには，文字クラスの先頭に書くか `---` のように`-` 自身のみの範囲を作ります．
+
+     `^` (ハット) は，文字クラスの先頭で反転を意味します．
+     例えば，`[^0-9]` は，`0` 〜 `9` 以外の1文字を意味します．`a` などの数字でない文字1文字分を表現しています．
 
 `?` (クエスチョン)
 
@@ -1806,6 +1814,21 @@ our @EXPORT_OK = ("func1");
 `|` (パイプ)
 
 :    表現の `or` を表現します．
+
+`\A`
+
+:    位置指定．文字列の先頭を意味します．
+
+     `\Aabc` は，`"xxxabc"` を意味しませんが，`"abcxxx"` は意味します．
+
+`\z`
+
+:    位置指定．文字列の末尾を意味します．
+
+     `abc\z` は，`"abcxxx"` を意味しませんが，`"xxxabc"` は意味します．
+
+     `\A` と一緒に使って，文字列全体を表現したいときにも使います．
+     `\Aabc\z` は，`"abc"` を意味します．`"xabcx"` のように `"abc"` を含んでいるものではありません．
 
 ---
 
@@ -2616,6 +2639,11 @@ sub list_notyet_todo {
 1;
 ```
 
+それぞれの `*.pl` ファイルの中が関数呼び出しだけになっていてほとんど同じです．
+この関数呼び出しを分岐する関数を作ってしてしまえば，
+`*.pl` ファイルは1つだけにできるかもしれません．
+色々と考えてみるのもよいでしょう．
+
 ## 7 練習問題
 
 ### 1
@@ -2664,12 +2692,264 @@ print($sum, "\n");
 
 ### 3
 
+`ex7_3.pl`
+
 ```{.perl .numberLines}
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+use Ex7 ("sum");
+
+if (@ARGV < 2) {
+    exit;
+}
+
+my ($b, $e) = @ARGV;
+
+
+print(sum($b, $e), "\n");
+```
+
+`Ex7.pm`
+
+```{.perl .numberLines}
+package Ex7;
+
+use strict;
+use warnings;
+
+use Exporter ("import");
+our @EXPORT_OK = ("sum");
+
+use POSIX;
+
+sub sum {
+    my ($b, $e) = @_;
+    my $sum = 0;
+    my $i = floor($b);
+    while ($i <= $e) {
+        $sum = $sum + $i;
+        $i = $i + 1;
+    }
+    return $sum;
+}
+
+1;
 ```
 
 ### 4
 
+`ex7_4.pl`
+
 ```{.perl .numberLines}
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+use Ex7 ("sum");
+
+if (@ARGV < 2) {
+    exit;
+}
+
+my ($b, $e) = @ARGV;
+
+if ($b =~ m/[^0-9.+-]/ or $e =~ m/[^0-9.+-]/) {
+    print("arg is not number: arg = (", $b, ", ", $e, ")\n");
+    exit;
+}
+
+print(sum($b, $e), "\n");
+```
+
+エラーになったときに，どういう入力をしていたか表示してあげてもよいですね．
+
+`ex7_4.t`
+
+```{.perl .numberLines}
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+use Test::More;
+
+my $filename = "./ex7_4.pl";
+
+{
+    my @arg_strs = (
+        "",
+        "a",
+        "a 1",
+        "1 10",
+    );
+    my @expecteds = (
+        "",
+        "",
+        "arg is not number: arg = (a, 1)\n",
+        "55\n",
+    );
+    my $i = 0;
+    while ($i < @arg_strs) {
+        my $arg_str = $arg_strs[$i];
+        my $expected = $expecteds[$i];
+        my $cmd = $filename . " " . $arg_str;
+        my $got = `$cmd`;
+        my $message = "args: " . $arg_str;
+        is($got, $expected, $message);
+        $i = $i + 1;
+    }
+}
+
+done_testing();
+```
+
+複数のテストをするのにリスト変数を使って，入力，出力を管理するようにしました．
+
+`is_number()` 関数版は，自分で書いてみましょう．
+
+又，数字を表現するのには，もう少し厳密にチェックすることもできます．
+
+`m/[0-9.+-]+/` では，`"+++"` のようなものもOK になります．
+
+例えば，以下がすぐに思い付きます．
+
+* 先頭は，符号(`+` や `-`) が来ることがある．
+* 先頭の数字は，`0` ではない (= `1` 〜 `9`)
+    * 小数点以下の場合や `0` の場合には，その限りではない
+* `.`(ドット) は，1回までしか出現しない
+* 空文字ではない
+* 小数点の整数部が `0` の場合は省略できる
+
+問題となるパターンを上げると
+
+* `"100-"`
+* `"010"`
+* `"1..1"`
+
+です．これらを考えると，`m/\A[-+]?(([1-9][0-9]*|0)(\.[0-9]*)?|\.[0-9]+)\z/` この辺りが妥当でしょうか？
+
+意味毎のパーツに分けると以下のようになります．
+色々入力してみて試してみるのも良いでしょう．
+
+```{.perl .numberLines}
+m/
+      \A
+        [-+]?
+        (
+          (
+            [1-9][0-9]*
+            |
+            0
+          )
+          (\.[0-9]*)?
+          |
+          \.[0-9]+
+        )
+      \z
+/x
+```
+
+```{.perl .numberLines}
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+use Test::More;
+
+{
+    my $re = qr'
+      \A
+        [-+]?
+        (
+          (
+            [1-9][0-9]*
+            |
+            0
+          )
+          (\.[0-9]*)?
+          |
+          \.[0-9]+
+        )
+      \z
+    'x;
+    my @ng_strs = (
+        "",
+        "100-",
+        "010",
+        "1..1",
+    );
+    foreach my $str (@ng_strs) {
+        ok(not($str =~ m/$re/), "F: str = " . $str);
+    }
+    my @ok_strs = (
+        "0",
+        "0.",
+        "0.1",
+        ".1",
+        "10.1",
+    );
+    foreach my $str (@ok_strs) {
+        ok($str =~ m/$re/, "T: str = " . $str);
+    }
+}
+
+done_testing();
+```
+
+こんな長い正規表現はあまり書きません．
+練習として解析してみるのもよいでしょう．
+
+### 5
+
+以前に載せてあるので省略します．
+
+### 6
+
+`ex7_6.t`
+
+```{.perl .numberLines}
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+use Test::More;
+
+use Ex7;
+
+{
+    my @bs = (
+        1,
+        -1,
+    );
+    my @es = (
+        10,
+        10,
+    );
+    my @expecteds = (
+        55,
+        54,
+    );
+    my $i = 0;
+    while ($i < @bs) {
+        my $b = $bs[$i];
+        my $e = $es[$i];
+        my $got = Ex7::sum($b, $e);
+        my $expected = $expecteds[$i];
+        my $message = join("",
+            "Ex7::sum(", $b, ", ", $e, ") = ", $expected,
+        );
+        is($got, $expected, $message);
+        $i = $i + 1;
+    }
+}
+
+done_testing();
 ```
 
 ---
