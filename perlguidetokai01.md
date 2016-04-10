@@ -425,7 +425,7 @@ close($fh) or die;
 
 ```{.perl .numberLines}
 open(my $fh, "<", "filename") or die;
-# 何か処理をする - まだ説明していない入力
+# 何か処理をする - 入力方法については，後で説明する
 close($fh) or die;
 ```
 
