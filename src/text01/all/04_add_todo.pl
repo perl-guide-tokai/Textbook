@@ -9,5 +9,5 @@ chomp($content);
 print($content, "\n");
 
 open(my $fh, ">>", "todolist.txt") or die;
-print($fh $content . "\n");
+print($fh $content, "\n");
 close($fh) or die;
