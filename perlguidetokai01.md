@@ -43,6 +43,10 @@ Perl は無料で手に入ります．
 
 ## プログラムを書いて，実行してみましょう
 
+以下の作業を行います．
+
+自分のマシンのアプリケーションで，エクスプローラやFinder，コマンドプロンプトやターミナル，テキストエディタを使いますので，ここで慣れておくとよいでしょう．
+
 - 作業用ディレクトリ(フォルダ)を作りましょう
     - ディレクトリ名: `perl20160220`
 - テキストエディタを開きます
@@ -55,6 +59,12 @@ Perl は無料で手に入ります．
 
 ### 実行例
 
+以下は，コマンドプロンプトでの実行例です．
+エディタを使う場合は，`edit` となっている部分を自分の好きなエディタと置き換えてください．
+
+又は，テキストエディタのGUI が既に立ち上がっていて，
+そのディレクトリに移動しなければならないかもしれません．
+
 ```{.bash .numberLines}
 $ mkdir perl20160220
 $ cd perl20160220
@@ -62,7 +72,7 @@ $ edit 01_hello.pl
 $ perl 01_hello.pl
 ```
 
-### 01_hello.pl
+### ファイル名: `01_hello.pl`
 
 ```{.perl .numberLines}
 #!/usr/bin/env perl
@@ -147,6 +157,10 @@ Windows の人は，ファイル名の拡張子部分で判定するようにな
 
 ## 練習問題
 
+練習問題は，ファイル名を別々につけておくと後で参照するのが楽になります．
+例えば，以下の問題は，3章の問題なので，2番目の問題への回答には，
+`ex3_2.pl` のようなファイル名を付けるとよいでしょう．
+
 1. 自分の力で，`01_hello.pl` を作って実行してみましょう
 2. 他にも何かを表示してみましょう(名前，年齢など)
    (1つのプログラムファイルに，2つ以上の`print()`関数を使ってみてください．)
@@ -178,7 +192,7 @@ foreach (@lines) {
 プログラミング言語では，数値計算ができることが多いです．
 Perl でも，四則演算など基本的な計算が可能です．
 
-### 02_calc.pl
+### ファイル名: `02_calc.pl`
 
 ```{.perl .numberLines}
 #!/usr/bin/env perl
@@ -336,7 +350,7 @@ TODO リストを扱うプログラムを作ります．TODO リストにはど�
 
 ではまず，固定の TODO リストを作成するプログラムを作ってみましょう．
 
-## 03_init_todo.pl
+## ファイル名: `03_init_todo.pl`
 
 ```{.perl .numberLines}
 #!/usr/bin/env perl
@@ -434,7 +448,7 @@ print($fh "Hello, World\n");  # カンマが無いことに注意
 さっきの例では，1つのプログラムから固定の TODO しか作れませんでした．
 こんどは，プログラムを変えないで，新しい TODO を追加する機能を作りましょう．
 
-## 04_add_todo.pl
+## ファイル名: `04_add_todo.pl`
 
 
 ```{.perl .numberLines}
@@ -577,7 +591,7 @@ print($line, "\n");
 TODO を追加するところまでできるようになりました．
 では，現在の TODO 全部を表示できるようなプログラムを作りましょう．
 
-## 05_list_todo.pl
+## ファイル名: `05_list_todo.pl`
 
 ```{.perl .numberLines}
 #!/usr/bin/env perl
@@ -719,7 +733,7 @@ while ($count < 10) { # 繰り返しは，count が 10 になったら終了す�
 TODO を完了させられなければ，TODO リストとしては未完成です．
 TODO を指定して，その TODO を完了済み(Done) としてマークできるようにしましょう．
 
-## 06_done_todo.pl
+## ファイル名: `06_done_todo.pl`
 
 ```{.perl .numberLines}
 #!/usr/bin/env perl
@@ -880,7 +894,7 @@ ex9\_4\_in.txt
 終了した TODO は見る必要が無いと思います．
 では，TODO のうち未完了のものだけ表示するプログラムを作りましょう．
 
-## 07_list_notyet_todo.pl
+## ファイル名: `07_list_notyet_todo.pl`
 
 ```{.perl .numberLines}
 #!/usr/bin/env perl
@@ -1212,7 +1226,7 @@ while ($count < 5) {
 
 `print()` を次の行に書くことができます．
 
-ex3_2.pl
+ファイル名: `ex3_2.pl`
 
 ```{.perl .numberLines}
 #!/usr/bin/env perl
@@ -1257,7 +1271,7 @@ print("tetsu\n17\n");
 
 `print` は，`print()` 関数のことで，何も指定しないとデフォルトで，`$_` 変数の内容を出力することになっています．
 
-`ex3_4.pl`
+ファイル名: `ex3_4.pl`
 
 ```{.perl .numberLines}
 #!/usr/bin/env perl
@@ -1285,7 +1299,7 @@ foreach (@lines) {
 出てきた演算子は，`+`, `-`, `*`, `/`, `.`, `x` です．
 それぞれを使ってみて，演算子に慣れましょう．
 
-`ex4_1.pl`
+ファイル名: `ex4_1.pl`
 
 ```{.perl .numberLines}
 #!/usr/bin/env perl
@@ -1307,7 +1321,7 @@ print(1 + 2 * 3, "\n"); # => 7
 
 変数を使うときに最初に，`my` を入れるのを忘れないでください．
 
-`ex4_2.pl`
+ファイル名: `ex4_2.pl`
 
 ```{.perl .numberLines}
 #!/usr/bin/env perl
@@ -1364,7 +1378,7 @@ close($fh) or die;
 
 半径を固定値ではなく，入力できるようにしたものです．
 
-`ex7_2.pl`
+ファイル名: `ex7_2.pl`
 
 ```{.perl .numberLines}
 #!/usr/bin/env perl
@@ -1390,7 +1404,7 @@ print("半径: ", $r, " の円周は ", 2 * $pi * $r, "\n");
 `Argument "a" isn't numeric in ...` のような警告が出てしまうでしょう．
 これらを回避する方法もありますが，一旦は無視します．
 
-`ex7_3.pl`
+ファイル名: `ex7_3.pl`
 
 ```{.perl .numberLines}
 #!/usr/bin/env perl
@@ -1414,7 +1428,7 @@ print($op1 x $op2, "\n");
 
 ### 4.
 
-`ex7_4.pl`
+ファイル名: `ex7_4.pl`
 
 ```{.perl .numberLines}
 #!/usr/bin/env perl
@@ -1445,7 +1459,7 @@ close($wfh) or die;
 
 まっすぐ書くとこのようになります．
 
-`ex8_1.pl`
+ファイル名: `ex8_1.pl`
 
 ```{.perl .numberLines}
 #!/usr/bin/env perl
@@ -1462,7 +1476,7 @@ close($fh) or die;
 
 ファイル名を指定できるようにすると，以下のようになります．
 
-`ex8_1_2.pl`
+ファイル名: `ex8_1_2.pl`
 
 ```{.perl .numberLines}
 #!/usr/bin/env perl
@@ -1482,7 +1496,7 @@ close($fh) or die;
 
 ### 2.
 
-`ex8_2.pl`
+ファイル名: `ex8_2.pl`
 
 ```{.perl .numberLines}
 #!/usr/bin/env perl
@@ -1499,7 +1513,7 @@ while ($i <= 10) {
 
 ### 3.
 
-`ex8_3.pl`
+ファイル名: `ex8_3.pl`
 
 ```{.perl .numberLines}
 #!/usr/bin/env perl
@@ -1518,7 +1532,7 @@ print($sum, "\n");
 
 ### 4.
 
-`ex8_4.pl`
+ファイル名: `ex8_4.pl`
 
 ```{.perl .numberLines}
 #!/usr/bin/env perl
@@ -1540,7 +1554,7 @@ print($sum, "\n");
 
 ### 5.
 
-`ex8_5.pl`
+ファイル名: `ex8_5.pl`
 
 ```{.perl .numberLines}
 #!/usr/bin/env perl
@@ -1559,7 +1573,7 @@ while ($n < 20) {
 
 素直に書くとこのようになるでしょう．
 
-`ex8_6.pl`
+ファイル名: `ex8_6.pl`
 
 ```{.perl .numberLines}
 #!/usr/bin/env perl
@@ -1580,7 +1594,7 @@ print("end...", "\n");
 スカラ変数が初期化時には，undef であることを利用して，
 以下のように書くこともできます．
 
-`ex8_6_2.pl`
+ファイル名: `ex8_6_2.pl`
 
 ```{.perl .numberLines}
 #!/usr/bin/env perl
@@ -1600,7 +1614,7 @@ print("end...", "\n");
 
 ### 1.
 
-`ex9_1.pl`
+ファイル名: `ex9_1.pl`
 
 ```{.perl .numberLines}
 #!/usr/bin/env perl
@@ -1618,7 +1632,7 @@ while ($i < 5) {
 
 `foreach` を使うこともできます．
 
-`ex9_1_2.pl`
+ファイル名: `ex9_1_2.pl`
 
 ```{.perl .numberLines}
 #!/usr/bin/env perl
@@ -1634,7 +1648,7 @@ foreach my $char (@chars) {
 
 ### 2.
 
-`ex9_2.pl`
+ファイル名: `ex9_2.pl`
 
 ```{.perl .numberLines}
 #!/usr/bin/env perl
@@ -1658,7 +1672,7 @@ print(2 * $pi * $r, "\n");
 
 ### 4.
 
-`ex9_4.pl`
+ファイル名: `ex9_4.pl`
 
 ```{.perl .numberLines}
 #!/usr/bin/env perl
@@ -1679,7 +1693,7 @@ print($sum, "\n");
 
 ### 5.
 
-`ex9_5.pl`
+ファイル名: `ex9_5.pl`
 
 ```{.perl .numberLines}
 #!/usr/bin/env perl
@@ -1704,7 +1718,7 @@ print($sum, "\n");
 
 ### 1.
 
-`ex10_1.pl`
+ファイル名: `ex10_1.pl`
 
 ```{.perl .numberLines}
 #!/usr/bin/env perl
@@ -1726,7 +1740,7 @@ print($y, "年", $m, "月", $d, "日です", "\n");
 数値を読み込んで，配列の添字に使うことがわかればできます．
 リストの添字は，`0`から始まるので，入力する数字と1つずれていることに注意が必要です．
 
-`ex10_2.pl`
+ファイル名: `ex10_2.pl`
 
 ```{.perl .numberLines}
 #!/usr/bin/env perl
