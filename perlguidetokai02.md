@@ -133,6 +133,7 @@
 
 use strict;
 use warnings;
+use utf8;
 
 use Test::More; # is() / done_testing() 関数を使うために必要
 
@@ -158,7 +159,7 @@ done_testing();
 動作確認のことをテストと呼ぶことが多いようです．
 拡張子は，`.pl` ではないですが，これも Perl 言語のプログラムファイルです．
 
-`#` の行，`use strict; use warnings;` の行は説明の必要はないでしょう．
+`#` の行，`use strict; use warnings; use utf8;` の行は説明の必要はないでしょう．
 必要がある人は，前回のテキストを読んでみてください．
 
 `use Test::More;` は，テストに使う関数を使えるようにしています．
@@ -203,6 +204,7 @@ ok 1 - test for stdout
 
 use strict;
 use warnings;
+use utf8;
 
 use Test::More; # is() / done_testing() 関数を使うために必要
 
@@ -260,7 +262,7 @@ not ok 1 - test for stdout
 
 機能はそれぞれのモジュール毎に異なります．
 モジュール名は大抵大文字から始まります(例: `Test::More`)．
-`strict`, `warnings` は，プラグマ(pragma) といってモジュールとは異なりますが，
+`strict`, `warnings` などは，プラグマ(pragma) といってモジュールとは異なりますが，
 `use` を使う点，プログラムに機能を追加するという点では同じものです．
 
 ### `Test::More` モジュール
@@ -331,6 +333,7 @@ not ok 1 - test for stdout
 
 use strict;
 use warnings;
+use utf8;
 
 use Test::More; # is() / done_testing() 関数を使うために必要
 use File::Temp ("tempdir"); # tempdir() 関数を使うために必要
@@ -459,6 +462,7 @@ done_testing(); # テストの終了を宣言
 
 use strict;
 use warnings;
+use utf8;
 
 use File::Temp ("tempdir");
 use Cwd;
@@ -534,6 +538,7 @@ $ pwd         # Windows だと cd
 
 use strict;
 use warnings;
+use utf8;
 
 {
     my $localvar = 1;
@@ -549,6 +554,7 @@ print($localvar);
 
 use strict;
 use warnings;
+use utf8;
 
 my $localvar;
 {
@@ -584,6 +590,7 @@ my $expected = "/private" . $temp_dirname;
 
 use strict;
 use warnings;
+use utf8;
 
 # pattern1
 my $v1;
@@ -620,6 +627,7 @@ print($v2);
 
 use strict;
 use warnings;
+use utf8;
 
 use Test::More;
 use File::Temp ("tempdir");
@@ -780,6 +788,7 @@ package MyTestUtil;
 
 use strict;
 use warnings;
+use utf8;
 
 use Cwd;
 
@@ -821,6 +830,7 @@ my $program_fullpath = fullpath($program_filename);
 
 use strict;
 use warnings;
+use utf8;
 
 use Test::More; # is() / done_testing() 関数を使うために必要
 use File::Temp ("tempdir"); # tempdir() 関数を使うために必要
@@ -861,6 +871,7 @@ done_testing(); # テストの終了を宣言
 
 use strict;
 use warnings;
+use utf8;
 
 use Test::More;
 use File::Temp ("tempdir");
@@ -897,6 +908,7 @@ package MyTestUtil;
 
 use strict;
 use warnings;
+use utf8;
 
 use Cwd;
 
@@ -1161,6 +1173,7 @@ use MyTestUtil ("fullpath", "chtempdir"); # 関数を追加
 
 use strict;
 use warnings;
+use utf8;
 
 use Test::More; # is() / done_testing() 関数を使うために必要
 
@@ -1199,6 +1212,7 @@ done_testing(); # テストの終了を宣言
 
 use strict;
 use warnings;
+use utf8;
 
 use Test::More;
 
@@ -1233,6 +1247,7 @@ package MyTestUtil;
 
 use strict;
 use warnings;
+use utf8;
 
 use Cwd;
 use File::Temp ("tempdir");
@@ -1282,6 +1297,7 @@ sub chtempdir {
 
 use strict;
 use warnings;
+use utf8;
 
 use Test::More;
 
@@ -1371,6 +1387,7 @@ TODO リストのいくつかのプログラムをテストすることができ
 
 use strict;
 use warnings;
+use utf8;
 
 my $re;
 if (@ARGV > 0) {
@@ -1395,6 +1412,7 @@ close($fh) or die;
 
 use strict;
 use warnings;
+use utf8;
 
 use Test::More;
 
@@ -1894,6 +1912,7 @@ our @EXPORT_OK = ("func1");
 
 use strict;
 use warnings;
+use utf8;
 
 use Test::More;
 
@@ -1932,6 +1951,7 @@ done_testing();
 
 use strict;
 use warnings;
+use utf8;
 
 use Test::More;
 
@@ -1972,6 +1992,7 @@ done_testing();
 
 use strict;
 use warnings;
+use utf8;
 
 use Test::More;
 use File::Temp ("tempdir");
@@ -2017,6 +2038,7 @@ done_testing();
 
 use strict;
 use warnings;
+use utf8;
 
 use File::Temp;
 use Cwd;
@@ -2036,6 +2058,7 @@ print("new     directory: ", cwd(), "\n");
 
 use strict;
 use warnings;
+use utf8;
 
 use File::Temp;
 use Cwd;
@@ -2067,6 +2090,7 @@ done_testing();
 
 use strict;
 use warnings;
+use utf8;
 
 sub circumference_of_circle {
     my ($r) = @_;
@@ -2084,6 +2108,7 @@ print(circumference_of_circle($r), "\n");
 
 use strict;
 use warnings;
+use utf8;
 
 use Math ("circumference_of_circle", "area_of_circle");
 
@@ -2098,6 +2123,7 @@ package Math;
 
 use strict;
 use warnings;
+use utf8;
 
 use Exporter ("import");
 our @EXPORT_OK = ("circumference_of_circle", "area_of_circle");
@@ -2126,6 +2152,7 @@ sub area_of_circle {
 
 use strict;
 use warnings;
+use utf8;
 
 use Test::More; # is() / done_testing() 関数を使うために必要
 
@@ -2160,6 +2187,7 @@ done_testing(); # テストの終了を宣言
 
 use strict;
 use warnings;
+use utf8;
 
 use Test::More;
 
@@ -2190,6 +2218,7 @@ package MyTestUtil;
 
 use strict;
 use warnings;
+use utf8;
 
 use Cwd;
 use File::Temp ("tempdir");
@@ -2233,6 +2262,7 @@ sub is_todolist_content {
 
 use strict;
 use warnings;
+use utf8;
 
 use Test::More;
 
@@ -2271,6 +2301,7 @@ package MyTestUtil;
 
 use strict;
 use warnings;
+use utf8;
 
 use Cwd;
 use File::Temp ("tempdir");
@@ -2320,6 +2351,7 @@ sub make_datafile {
 
 use strict;
 use warnings;
+use utf8;
 
 use Test::More;
 
@@ -2362,6 +2394,7 @@ done_testing();
 
 use strict;
 use warnings;
+use utf8;
 
 use Test::More;
 
@@ -2403,6 +2436,7 @@ done_testing();
 
 use strict;
 use warnings;
+use utf8;
 
 use Test::More;
 
@@ -2431,6 +2465,7 @@ done_testing();
 
 use strict;
 use warnings;
+use utf8;
 
 use Test::More;
 
@@ -2471,6 +2506,7 @@ package MyTestUtil;
 
 use strict;
 use warnings;
+use utf8;
 
 use Cwd;
 use File::Temp ("tempdir");
@@ -2536,6 +2572,7 @@ sub execute_with_input {
 
 use strict;
 use warnings;
+use utf8;
 
 use FindBin;
 use lib ($FindBin::Bin);
@@ -2552,6 +2589,7 @@ MyTodolist::init_todo($todo);
 
 use strict;
 use warnings;
+use utf8;
 
 use FindBin;
 use lib ($FindBin::Bin);
@@ -2568,6 +2606,7 @@ MyTodolist::add_todo();
 
 use strict;
 use warnings;
+use utf8;
 
 use FindBin;
 use lib ($FindBin::Bin);
@@ -2584,6 +2623,7 @@ MyTodolist::list_todo();
 
 use strict;
 use warnings;
+use utf8;
 
 use FindBin;
 use lib ($FindBin::Bin);
@@ -2600,6 +2640,7 @@ MyTodolist::done_todo();
 
 use strict;
 use warnings;
+use utf8;
 
 use FindBin;
 use lib ($FindBin::Bin);
@@ -2616,6 +2657,7 @@ package MyTodolist;
 
 use strict;
 use warnings;
+use utf8;
 
 use Exporter ("import");
 our @EXPORT_OK = ();
@@ -2704,6 +2746,7 @@ sub list_notyet_todo {
 
 use strict;
 use warnings;
+use utf8;
 
 my $name = "john";
 
@@ -2723,6 +2766,7 @@ print("Hello, ", $name, "\n");
 
 use strict;
 use warnings;
+use utf8;
 
 if (@ARGV < 2) {
     exit;
@@ -2748,6 +2792,7 @@ print($sum, "\n");
 
 use strict;
 use warnings;
+use utf8;
 
 use Ex7 ("sum");
 
@@ -2768,6 +2813,7 @@ package Ex7;
 
 use strict;
 use warnings;
+use utf8;
 
 use Exporter ("import");
 our @EXPORT_OK = ("sum");
@@ -2795,6 +2841,7 @@ sub sum {
 
 use strict;
 use warnings;
+use utf8;
 
 use Ex7 ("sum");
 
@@ -2821,6 +2868,7 @@ print(sum($b, $e), "\n");
 
 use strict;
 use warnings;
+use utf8;
 
 use Test::More;
 
@@ -2907,6 +2955,7 @@ m/
 
 use strict;
 use warnings;
+use utf8;
 
 use Test::More;
 
@@ -2966,6 +3015,7 @@ done_testing();
 
 use strict;
 use warnings;
+use utf8;
 
 use Test::More;
 

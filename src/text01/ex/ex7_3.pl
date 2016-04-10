@@ -2,6 +2,7 @@
 
 use strict;
 use warnings;
+use utf8;
 
 my $op1 = <STDIN>; # 入力を受け取る
 chomp($op1); # 入力された改行文字を削除する

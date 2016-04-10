@@ -2,6 +2,7 @@
 
 use strict;
 use warnings;
+use utf8;
 
 print("which number?: ");
 my $num = <STDIN>;

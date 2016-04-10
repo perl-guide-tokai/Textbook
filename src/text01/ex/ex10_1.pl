@@ -2,6 +2,7 @@
 
 use strict;
 use warnings;
+use utf8;
 
 # 入力
 my $ymd = <STDIN>;

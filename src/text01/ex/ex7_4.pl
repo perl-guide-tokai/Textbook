@@ -2,6 +2,7 @@
 
 use strict;
 use warnings;
+use utf8;
 
 # 入力
 open(my $rfh, "<", "ex7_4_in.txt") or die;

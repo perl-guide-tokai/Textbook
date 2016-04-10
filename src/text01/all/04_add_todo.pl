@@ -2,6 +2,7 @@
 
 use strict;
 use warnings;
+use utf8;
 
 print("Input todo: ");
 my $content = <STDIN>;

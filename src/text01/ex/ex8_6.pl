@@ -2,6 +2,7 @@
 
 use strict;
 use warnings;
+use utf8;
 
 my $input = <STDIN>;
 chomp($input);

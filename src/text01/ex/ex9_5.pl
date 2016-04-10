@@ -2,6 +2,7 @@
 
 use strict;
 use warnings;
+use utf8;
 
 open(my $fh, "<", "ex9_4_in.txt") or die;
 my $sum = 0;

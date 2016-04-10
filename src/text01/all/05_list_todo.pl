@@ -2,6 +2,7 @@
 
 use strict;
 use warnings;
+use utf8;
 
 open(my $fh, "<", "todolist.txt") or die;
 my $count = 1;

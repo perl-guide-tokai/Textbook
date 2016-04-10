@@ -2,6 +2,7 @@
 
 use strict;
 use warnings;
+use utf8;
 
 my $n = 1;
 while ($n < 20) {

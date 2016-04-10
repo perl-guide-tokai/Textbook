@@ -79,6 +79,7 @@ $ perl 01_hello.pl
 
 use strict;
 use warnings;
+use utf8;
 
 print("Hello, World\n");
 ```
@@ -108,6 +109,7 @@ Perl 言語で書かれたソースコードの中では，`#` (シャープ) �
 
 use strict;   # 文法を厳密にチェックする
 use warnings; # 警告を出す
+use utf8;     # 文字コードを指定する
 
 print("Hello, World\n"); # 端末に文字列を出力する
 ```
@@ -137,6 +139,10 @@ Windows の人は，ファイル名の拡張子部分で判定するようにな
 次の行の，`use strict; use warnings;` の部分は，警告を多めに出すように指定してあります．
 慣れないうち，慣れていても，情報が多い方が何かがあったときに気付きやすいので，
 この 2行は基本的には書きましょう．
+
+その次の行は，`use utf8;` で，文字コードに関する部分です．
+自分のプログラムファイルの文字コードは基本的に UTF-8 で書きましょう．
+テキストエディタは文字コードを指定できるものが後々楽だと思います．
 
 ここまでは，プログラムの動作にはあまり関係ありませんでした．
 残りの1行が，このプログラムファイルの本体です．
@@ -172,6 +178,7 @@ Windows の人は，ファイル名の拡張子部分で判定するようにな
 
 use strict;
 use warnings;
+use utf8;
 
 my @lines = `perldoc -u -f atan2`;
 foreach (@lines) {
@@ -199,6 +206,7 @@ Perl でも，四則演算など基本的な計算が可能です．
 
 use strict;
 use warnings;
+use utf8;
 
 print(1 + 1, "\n");  # => 2
 
@@ -357,6 +365,7 @@ TODO リストを扱うプログラムを作ります．TODO リストにはど�
 
 use strict;
 use warnings;
+use utf8;
 
 # 新しいファイルに書き込む
 open(my $fh, ">", "todolist.txt") or die;
@@ -456,6 +465,7 @@ print($fh "Hello, World\n");  # カンマが無いことに注意
 
 use strict;
 use warnings;
+use utf8;
 
 # 1行読み込む
 print("Input todo : ");
@@ -598,6 +608,7 @@ TODO を追加するところまでできるようになりました．
 
 use strict;
 use warnings;
+use utf8;
 
 open(my $fh, "<", "todolist.txt") or die;
 my $count = 1;
@@ -740,6 +751,7 @@ TODO を指定して，その TODO を完了済み(Done) としてマークで�
 
 use strict;
 use warnings;
+use utf8;
 
 # 番号を入力
 print("which number?: ");
@@ -901,6 +913,7 @@ ex9\_4\_in.txt
 
 use strict;
 use warnings;
+use utf8;
 
 # TODO リストを読み込んで，完了でないものだけ出力
 open(my $fh, "<", "todolist.txt") or die;
@@ -1044,6 +1057,7 @@ TODO リストの機能の最低限のものは作りましたが，まだ機能
 
 use strict;
 use warnings;
+use utf8;
 ```
 * 空行(からぎょう) は，意味の分割のために使う
 
@@ -1233,6 +1247,7 @@ while ($count < 5) {
 
 use strict;
 use warnings;
+use utf8;
 
 print("tetsu", "\n");
 print("17", "\n");
@@ -1279,6 +1294,7 @@ print("tetsu\n17\n");
 # いつもの
 use strict;
 use warnings;
+use utf8;
 
 # atan2() という関数の説明を @lines というリスト変数に保持している
 my @lines = `perldoc -u -f atan2`;
@@ -1306,6 +1322,7 @@ foreach (@lines) {
 
 use strict;
 use warnings;
+use utf8;
 
 print(1 + 3, "\n"); # => 4
 print(3 - 1, "\n"); # => 2
@@ -1328,6 +1345,7 @@ print(1 + 2 * 3, "\n"); # => 7
 
 use strict;
 use warnings;
+use utf8;
 
 my $r = 12.5;
 my $pi = 3.14;
@@ -1359,6 +1377,7 @@ TODO の属性として良くあるのは，期限やカテゴリです．
 
 use strict;
 use warnings;
+use utf8;
 
 open(my $fh, ">", "sample.txt") or die;
 print($fh "This is test file.", "\n");
@@ -1385,6 +1404,7 @@ close($fh) or die;
 
 use strict;
 use warnings;
+use utf8;
 
 # 入力
 my $r = <STDIN>;
@@ -1411,6 +1431,7 @@ print("半径: ", $r, " の円周は ", 2 * $pi * $r, "\n");
 
 use strict;
 use warnings;
+use utf8;
 
 my $op1 = <STDIN>; # 入力を受け取る
 chomp($op1); # 入力された改行文字を削除する
@@ -1435,6 +1456,7 @@ print($op1 x $op2, "\n");
 
 use strict;
 use warnings;
+use utf8;
 
 # 入力
 open(my $rfh, "<", "ex7_4_in.txt") or die;
@@ -1466,6 +1488,7 @@ close($wfh) or die;
 
 use strict;
 use warnings;
+use utf8;
 
 open(my $fh, "<", "ex8_1_in.txt") or die;
 while (defined(my $line = <$fh>)) {
@@ -1483,6 +1506,7 @@ close($fh) or die;
 
 use strict;
 use warnings;
+use utf8;
 
 my $filename = <STDIN>;
 chomp($filename);
@@ -1503,6 +1527,7 @@ close($fh) or die;
 
 use strict;
 use warnings;
+use utf8;
 
 my $i = 1;
 while ($i <= 10) {
@@ -1520,6 +1545,7 @@ while ($i <= 10) {
 
 use strict;
 use warnings;
+use utf8;
 
 my $i = 1;
 my $sum = 0;
@@ -1539,6 +1565,7 @@ print($sum, "\n");
 
 use strict;
 use warnings;
+use utf8;
 
 my $n = <STDIN>;
 chomp($n);
@@ -1561,6 +1588,7 @@ print($sum, "\n");
 
 use strict;
 use warnings;
+use utf8;
 
 my $n = 1;
 while ($n < 20) {
@@ -1580,6 +1608,7 @@ while ($n < 20) {
 
 use strict;
 use warnings;
+use utf8;
 
 my $input = <STDIN>;
 chomp($input);
@@ -1601,6 +1630,7 @@ print("end...", "\n");
 
 use strict;
 use warnings;
+use utf8;
 
 my $input;
 while (!defined($input) or $input ne "quit") {
@@ -1621,6 +1651,7 @@ print("end...", "\n");
 
 use strict;
 use warnings;
+use utf8;
 
 my @chars = ("alpha", "bravo", "charlie", "delta", "echo");
 my $i = 0;
@@ -1639,6 +1670,7 @@ while ($i < 5) {
 
 use strict;
 use warnings;
+use utf8;
 
 my @chars = ("alpha", "bravo", "charlie", "delta", "echo");
 foreach my $char (@chars) {
@@ -1655,6 +1687,7 @@ foreach my $char (@chars) {
 
 use strict;
 use warnings;
+use utf8;
 
 my $r = <STDIN>;
 chomp($r);
@@ -1679,6 +1712,7 @@ print(2 * $pi * $r, "\n");
 
 use strict;
 use warnings;
+use utf8;
 
 open(my $fh, "<", "ex9_4_in.txt") or die;
 my $sum = 0;
@@ -1700,6 +1734,7 @@ print($sum, "\n");
 
 use strict;
 use warnings;
+use utf8;
 
 open(my $fh, "<", "ex9_4_in.txt") or die;
 my $sum = 0;
@@ -1725,6 +1760,7 @@ print($sum, "\n");
 
 use strict;
 use warnings;
+use utf8;
 
 # 入力
 my $ymd = <STDIN>;
@@ -1747,6 +1783,7 @@ print($y, "年", $m, "月", $d, "日です", "\n");
 
 use strict;
 use warnings;
+use utf8;
 
 my @names = ("fred", "betty", "dino", "wilma", "pebbles", "bamm-bamm");
 

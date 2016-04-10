@@ -2,6 +2,7 @@
 
 use strict;
 use warnings;
+use utf8;
 
 my @chars = ("alpha", "bravo", "charlie", "delta", "echo");
 my $i = 0;

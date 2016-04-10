@@ -2,6 +2,7 @@
 
 use strict;
 use warnings;
+use utf8;
 
 print(1 + 1, "\n");
 

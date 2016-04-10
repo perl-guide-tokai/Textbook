@@ -2,6 +2,7 @@
 
 use strict;
 use warnings;
+use utf8;
 
 my @names = ("fred", "betty", "dino", "wilma", "pebbles", "bamm-bamm");
 

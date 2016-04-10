@@ -2,6 +2,7 @@
 
 use strict;
 use warnings;
+use utf8;
 
 print(1 + 3, "\n"); # => 4
 print(3 - 1, "\n"); # => 2
