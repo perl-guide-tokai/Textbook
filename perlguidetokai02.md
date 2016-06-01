@@ -1282,7 +1282,9 @@ sub chtempdir {
     `Math` モジュールを使って，半径を入力して円周と面積を出力するプログラムを作ってみましょう．
 
     (ヒント: 円の面積は，$\pi r^2$ です)
-3. `is_todolist_content()` という関数(引数: $expected, $message，戻り値: なし)を `MyTestUtil` モジュール内に作り，それぞれのテストで使うようにしてみましょう．
+3. `is_todolist_content()` という関数(引数: `$expected`, `$message`，戻り値: なし)を `MyTestUtil` モジュール内に作り，それぞれのテストで使うようにしてみましょう．
+
+    関数は，`todolist.txt` の内容を `$expected` と比較するようにしなさい．
 
 # 共通部分を使ってプログラムを書いてみる
 
