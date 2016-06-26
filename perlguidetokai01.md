@@ -545,6 +545,7 @@ Perl がうまくやってくれるので，あまり気にしなくともいい
 
 ```{.perl .numberLines}
 my $num = <STDIN>;
+chomp($num);
 
 my $ans = $num * 2;   # <= ここで，* 演算子の引数は数値なので，
                       #    文字列→数値の変換が起こっている
