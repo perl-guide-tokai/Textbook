@@ -134,6 +134,8 @@
 use strict;
 use warnings;
 use utf8;
+use open IO => ":encoding(utf8)";
+use open ":std";
 
 use Test::More; # is() / done_testing() 関数を使うために必要
 
@@ -159,7 +161,7 @@ done_testing();
 動作確認のことをテストと呼ぶことが多いようです．
 拡張子は，`.pl` ではないですが，これも Perl 言語のプログラムファイルです．
 
-`#` の行，`use strict; use warnings; use utf8;` の行は説明の必要はないでしょう．
+`#` の行，`use strict; use warnings; use utf8; use open IO => ":encoding(utf8)"; use open ":std";` の行は説明の必要はないでしょう．
 必要がある人は，前回のテキストを読んでみてください．
 
 `use Test::More;` は，テストに使う関数を使えるようにしています．
@@ -205,6 +207,8 @@ ok 1 - test for stdout
 use strict;
 use warnings;
 use utf8;
+use open IO => ":encoding(utf8)";
+use open ":std";
 
 use Test::More; # is() / done_testing() 関数を使うために必要
 
@@ -334,6 +338,8 @@ not ok 1 - test for stdout
 use strict;
 use warnings;
 use utf8;
+use open IO => ":encoding(utf8)";
+use open ":std";
 
 use Test::More; # is() / done_testing() 関数を使うために必要
 use File::Temp ("tempdir"); # tempdir() 関数を使うために必要
@@ -463,6 +469,8 @@ done_testing(); # テストの終了を宣言
 use strict;
 use warnings;
 use utf8;
+use open IO => ":encoding(utf8)";
+use open ":std";
 
 use File::Temp ("tempdir");
 use Cwd;
@@ -539,6 +547,8 @@ $ pwd         # Windows だと cd
 use strict;
 use warnings;
 use utf8;
+use open IO => ":encoding(utf8)";
+use open ":std";
 
 {
     my $localvar = 1;
@@ -555,6 +565,8 @@ print($localvar);
 use strict;
 use warnings;
 use utf8;
+use open IO => ":encoding(utf8)";
+use open ":std";
 
 my $localvar;
 {
@@ -591,6 +603,8 @@ my $expected = "/private" . $temp_dirname;
 use strict;
 use warnings;
 use utf8;
+use open IO => ":encoding(utf8)";
+use open ":std";
 
 # pattern1
 my $v1;
@@ -628,6 +642,8 @@ print($v2);
 use strict;
 use warnings;
 use utf8;
+use open IO => ":encoding(utf8)";
+use open ":std";
 
 use Test::More;
 use File::Temp ("tempdir");
@@ -781,6 +797,10 @@ my $program_fullpath = fullpath($program_filename);
 
 とりあえず以下のように書けば，`use MyTestUtil` できるようになります．
 
+ここで `use strict; use warnings; use utf8;` は，元のPerl プログラムと同じく使います．
+詳しくは説明しませんが，
+`use open IO => ":encoding(utf8)"; use open ":std";` については，モジュール側には書かず，プログラムのメイン側(`*.pl` や `*.t`) に含めます．
+
 MyTestUtil.pm
 
 ```{.perl .numberLines}
@@ -831,6 +851,8 @@ my $program_fullpath = fullpath($program_filename);
 use strict;
 use warnings;
 use utf8;
+use open IO => ":encoding(utf8)";
+use open ":std";
 
 use Test::More; # is() / done_testing() 関数を使うために必要
 use File::Temp ("tempdir"); # tempdir() 関数を使うために必要
@@ -872,6 +894,8 @@ done_testing(); # テストの終了を宣言
 use strict;
 use warnings;
 use utf8;
+use open IO => ":encoding(utf8)";
+use open ":std";
 
 use Test::More;
 use File::Temp ("tempdir");
@@ -1174,6 +1198,8 @@ use MyTestUtil ("fullpath", "chtempdir"); # 関数を追加
 use strict;
 use warnings;
 use utf8;
+use open IO => ":encoding(utf8)";
+use open ":std";
 
 use Test::More; # is() / done_testing() 関数を使うために必要
 
@@ -1213,6 +1239,8 @@ done_testing(); # テストの終了を宣言
 use strict;
 use warnings;
 use utf8;
+use open IO => ":encoding(utf8)";
+use open ":std";
 
 use Test::More;
 
@@ -1300,6 +1328,8 @@ sub chtempdir {
 use strict;
 use warnings;
 use utf8;
+use open IO => ":encoding(utf8)";
+use open ":std";
 
 use Test::More;
 
@@ -1390,6 +1420,8 @@ TODO リストのいくつかのプログラムをテストすることができ
 use strict;
 use warnings;
 use utf8;
+use open IO => ":encoding(utf8)";
+use open ":std";
 
 my $re;
 if (@ARGV > 0) {
@@ -1415,6 +1447,8 @@ close($fh) or die;
 use strict;
 use warnings;
 use utf8;
+use open IO => ":encoding(utf8)";
+use open ":std";
 
 use Test::More;
 
@@ -1915,6 +1949,8 @@ our @EXPORT_OK = ("func1");
 use strict;
 use warnings;
 use utf8;
+use open IO => ":encoding(utf8)";
+use open ":std";
 
 use Test::More;
 
@@ -1954,6 +1990,8 @@ done_testing();
 use strict;
 use warnings;
 use utf8;
+use open IO => ":encoding(utf8)";
+use open ":std";
 
 use Test::More;
 
@@ -1995,6 +2033,8 @@ done_testing();
 use strict;
 use warnings;
 use utf8;
+use open IO => ":encoding(utf8)";
+use open ":std";
 
 use Test::More;
 use File::Temp ("tempdir");
@@ -2041,6 +2081,8 @@ done_testing();
 use strict;
 use warnings;
 use utf8;
+use open IO => ":encoding(utf8)";
+use open ":std";
 
 use File::Temp;
 use Cwd;
@@ -2061,6 +2103,8 @@ print("new     directory: ", cwd(), "\n");
 use strict;
 use warnings;
 use utf8;
+use open IO => ":encoding(utf8)";
+use open ":std";
 
 use File::Temp;
 use Cwd;
@@ -2093,6 +2137,8 @@ done_testing();
 use strict;
 use warnings;
 use utf8;
+use open IO => ":encoding(utf8)";
+use open ":std";
 
 sub circumference_of_circle {
     my ($r) = @_;
@@ -2111,6 +2157,8 @@ print(circumference_of_circle($r), "\n");
 use strict;
 use warnings;
 use utf8;
+use open IO => ":encoding(utf8)";
+use open ":std";
 
 use Math ("circumference_of_circle", "area_of_circle");
 
@@ -2155,6 +2203,8 @@ sub area_of_circle {
 use strict;
 use warnings;
 use utf8;
+use open IO => ":encoding(utf8)";
+use open ":std";
 
 use Test::More; # is() / done_testing() 関数を使うために必要
 
@@ -2190,6 +2240,8 @@ done_testing(); # テストの終了を宣言
 use strict;
 use warnings;
 use utf8;
+use open IO => ":encoding(utf8)";
+use open ":std";
 
 use Test::More;
 
@@ -2265,6 +2317,8 @@ sub is_todolist_content {
 use strict;
 use warnings;
 use utf8;
+use open IO => ":encoding(utf8)";
+use open ":std";
 
 use Test::More;
 
@@ -2354,6 +2408,8 @@ sub make_datafile {
 use strict;
 use warnings;
 use utf8;
+use open IO => ":encoding(utf8)";
+use open ":std";
 
 use Test::More;
 
@@ -2397,6 +2453,8 @@ done_testing();
 use strict;
 use warnings;
 use utf8;
+use open IO => ":encoding(utf8)";
+use open ":std";
 
 use Test::More;
 
@@ -2439,6 +2497,8 @@ done_testing();
 use strict;
 use warnings;
 use utf8;
+use open IO => ":encoding(utf8)";
+use open ":std";
 
 use Test::More;
 
@@ -2468,6 +2528,8 @@ done_testing();
 use strict;
 use warnings;
 use utf8;
+use open IO => ":encoding(utf8)";
+use open ":std";
 
 use Test::More;
 
@@ -2575,6 +2637,8 @@ sub execute_with_input {
 use strict;
 use warnings;
 use utf8;
+use open IO => ":encoding(utf8)";
+use open ":std";
 
 use FindBin;
 use lib ($FindBin::Bin);
@@ -2592,6 +2656,8 @@ MyTodolist::init_todo($todo);
 use strict;
 use warnings;
 use utf8;
+use open IO => ":encoding(utf8)";
+use open ":std";
 
 use FindBin;
 use lib ($FindBin::Bin);
@@ -2609,6 +2675,8 @@ MyTodolist::add_todo();
 use strict;
 use warnings;
 use utf8;
+use open IO => ":encoding(utf8)";
+use open ":std";
 
 use FindBin;
 use lib ($FindBin::Bin);
@@ -2626,6 +2694,8 @@ MyTodolist::list_todo();
 use strict;
 use warnings;
 use utf8;
+use open IO => ":encoding(utf8)";
+use open ":std";
 
 use FindBin;
 use lib ($FindBin::Bin);
@@ -2643,6 +2713,8 @@ MyTodolist::done_todo();
 use strict;
 use warnings;
 use utf8;
+use open IO => ":encoding(utf8)";
+use open ":std";
 
 use FindBin;
 use lib ($FindBin::Bin);
@@ -2749,6 +2821,8 @@ sub list_notyet_todo {
 use strict;
 use warnings;
 use utf8;
+use open IO => ":encoding(utf8)";
+use open ":std";
 
 my $name = "john";
 
@@ -2769,6 +2843,8 @@ print("Hello, ", $name, "\n");
 use strict;
 use warnings;
 use utf8;
+use open IO => ":encoding(utf8)";
+use open ":std";
 
 if (@ARGV < 2) {
     exit;
@@ -2795,6 +2871,8 @@ print($sum, "\n");
 use strict;
 use warnings;
 use utf8;
+use open IO => ":encoding(utf8)";
+use open ":std";
 
 use Ex7 ("sum");
 
@@ -2844,6 +2922,8 @@ sub sum {
 use strict;
 use warnings;
 use utf8;
+use open IO => ":encoding(utf8)";
+use open ":std";
 
 use Ex7 ("sum");
 
@@ -2871,6 +2951,8 @@ print(sum($b, $e), "\n");
 use strict;
 use warnings;
 use utf8;
+use open IO => ":encoding(utf8)";
+use open ":std";
 
 use Test::More;
 
@@ -2958,6 +3040,8 @@ m/
 use strict;
 use warnings;
 use utf8;
+use open IO => ":encoding(utf8)";
+use open ":std";
 
 use Test::More;
 
@@ -3018,6 +3102,8 @@ done_testing();
 use strict;
 use warnings;
 use utf8;
+use open IO => ":encoding(utf8)";
+use open ":std";
 
 use Test::More;
 
